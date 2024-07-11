@@ -1,0 +1,4 @@
+--select * from fT_T_srle where sec_role_nme in ('CBA_OD_Role','CBA_MRU_Role','CBA_FO_Role');
+Insert into FT_T_SRLE (SRLE_OID,APPL_ID,ORG_ID,START_TMS,END_TMS,LAST_CHG_TMS,LAST_CHG_USR_ID,SEC_ROLE_NME,SEC_ROLE_DESC) values ('-p2G01sc81','SSTATION',null,to_date('01/JAN/17','DD/MON/RR'),null,to_date('29/MAR/18','DD/MON/RR'),'user2','CBA_OD_Role','Role for OD');
+Insert into FT_T_SRLE (SRLE_OID,APPL_ID,ORG_ID,START_TMS,END_TMS,LAST_CHG_TMS,LAST_CHG_USR_ID,SEC_ROLE_NME,SEC_ROLE_DESC) values ('-p2H01sc81','SSTATION',null,to_date('01/JAN/17','DD/MON/RR'),null,to_date('29/MAR/18','DD/MON/RR'),'user2','CBA_MRU_Role','Role for MRU');
+Insert into FT_T_SRLE (SRLE_OID,APPL_ID,ORG_ID,START_TMS,END_TMS,LAST_CHG_TMS,LAST_CHG_USR_ID,SEC_ROLE_NME,SEC_ROLE_DESC) values ('-p2I01sc81','SSTATION',null,to_date('01/JAN/17','DD/MON/RR'),null,to_date('29/MAR/18','DD/MON/RR'),'user2','CBA_FO_Role','Role for FO');

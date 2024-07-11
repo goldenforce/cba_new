@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><PackageDescription xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" minInstallCenterVersion="8.1.2.1" version="1.0" xsi:noNamespaceSchemaLocation="PackageDescription.xsd">
+	<Package type="full" name="CBA Custom Configuration" version="8.7.1.01" reinstallable="true">
+		<Description>CBA Custom Configuration</Description>
+		<Component>CBA Custom Configuration</Component>
+		<Content>
+			<File type="Package" path="CBA_Custom_Configuration.tar.gz"/>
+		</Content>
+	</Package>
+	<Deployment>
+		<Prerequisites>
+			<Product id="GSDM-CF-871" name="Datamodel Configuration" type="GOLDENSOURCE">
+				<Version max="8.7.x.x" min="8.7.1.0"/>
+			</Product>
+			<Product id="GSDM-WF-871" name="Datamodel Workflow" type="GOLDENSOURCE">
+				<Version max="8.7.x.x" min="8.7.1.0"/>
+			</Product>
+			<Product id="VDDB-871" name="Datamodel VDDB" type="GOLDENSOURCE">
+				<Version max="8.7.x.x" min="8.7.1.0"/>
+			</Product>
+			<Product id="GSDM-871" name="Datamodel GSDM" type="GOLDENSOURCE">
+				<Version max="8.7.x.x" min="8.7.1.0"/>
+			</Product>
+		</Prerequisites>
+		<Locations>
+			<Location id="CFDataModel" multiple="true" type="Database">
+				<Description>The destination where the Configuration Datamodel was installed.</Description>
+				<Prerequisites>
+					<or>
+						<Prerequisite id="GSDM-CF-871"/>
+					</or>
+				</Prerequisites>
+			</Location>
+			<Location id="WFDataModel" multiple="true" type="Database">
+				<Description>The destination where the Workflow Datamodel was installed.</Description>
+				<Prerequisites>
+					<or>
+						<Prerequisite id="GSDM-WF-871"/>
+					</or>
+				</Prerequisites>
+			</Location>
+			<Location id="GSDMDataModel" multiple="true" type="Database">
+				<Description>The destination where the GSDM Datamodel was installed.</Description>
+				<Prerequisites>
+					<or>
+						<or>
+							<Prerequisite id="VDDB-871"/>
+						</or>
+						<or>
+							<Prerequisite id="GSDM-871"/>
+						</or>
+					</or>
+				</Prerequisites>
+			</Location>
+		</Locations>
+
+		<Tasks>
+			<tgz description="Unzip package archive temporarily" dest="tmp_CBA_Custom_Configuration/" name="Unzip Package" src="CBA_Custom_Configuration.tar.gz" srcLoc="PackageZip"/>
+
+			<!-- Customized Resources Installation -->
+			<deployResource description="Deploy BBReqPricingFutSetup.mdx" name="Save MDX - BBReqPricingFutSetup.mdx" dest="mapping/Cba/CBACustomReqRepFutRoll" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/CBACustomReqRepFutRoll/BBReqPricingFutSetup.mdx"/>
+			<deployResource description="Deploy CBACustomBBReqRepFutRoll.mdx" name="Save MDX - CBACustomBBReqRepFutRoll.mdx" dest="mapping/Cba/CBACustomReqRepFutRoll" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/CBACustomReqRepFutRoll/CBACustomBBReqRepFutRoll.mdx"/>
+			<deployResource description="Deploy ReutersCbaEODChainRICDataSetup.mdx" name="Save MDX - ReutersCbaEODChainRICDataSetup.mdx" dest="mapping/Cba/CBACustomReqRepFutRoll" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/CBACustomReqRepFutRoll/ReutersCbaEODChainRICDataSetup.mdx"/>
+			<deployResource description="Deploy CBA_BBCurrency.mdx" name="Save MDX - CBA_BBCurrency.mdx" dest="mapping/Cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/CBA_BBCurrency.mdx"/>
+			<deployResource description="Deploy CBA_ReutersDSS_Intraday_Pricing.mdx" name="Save MDX - CBA_ReutersDSS_Intraday_Pricing.mdx" dest="mapping/Cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/CBA_ReutersDSS_Intraday_Pricing.mdx"/>
+			<deployResource description="Deploy CBA_ReutersElectron.mdx" name="Save MDX - CBA_ReutersElectron.mdx" dest="mapping/Cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/CBA_ReutersElectron.mdx"/>
+			<deployResource description="Deploy CBA_UnionCalendar_Linkage.mdx" name="Save MDX - CBA_UnionCalendar_Linkage.mdx" dest="mapping/Cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/CBA_UnionCalendar_Linkage.mdx"/>
+			<deployResource description="Deploy CoppClark_Holiday_CBA.mdx" name="Save MDX - CoppClark_Holiday_CBA.mdx" dest="mapping/Cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/CoppClark_Holiday_CBA.mdx"/>
+			<deployResource description="Deploy CBA_ReutersDss_Maturity.mdx" name="Save MDX - CBA_ReutersDss_Maturity.mdx" dest="mapping/Cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/CBA_ReutersDss_Maturity.mdx"/>
+			
+			<deployResource description="Deploy Genval_Transalte.ttl" name="Save TTL - Genval_Transalte.ttl" dest="mapping/Cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/mapping/Cba/Genval_Transalte.ttl"/>
+			
+			<deployResource description="Deploy BbCommodityFuture.xslt" name="Save XSLT - BbCommodityFuture" dest="xslt/request/cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/xslt/BbCommodityFuture.xslt"/>
+			<deployResource description="Deploy BB_Price_CustomRequest.xslt" name="Save XSLT - BB_Price_CustomRequest.xslt" dest="xslt/request/cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/xslt/BB_Price_CustomRequest.xslt"/>
+			<deployResource description="Deploy reuters.xslt" name="Save XSLT - reuters.xslt" dest="mapping/rsu/dss" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/xslt/reuters.xslt"/>
+			<deployResource description="Deploy BBCurrencyImport.xslt" name="Save XSLT - BBCurrencyImport.xslt" dest="xslt/request/bloomberg" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/xslt/BBCurrencyImport.xslt"/>
+			<deployResource description="Deploy BBCurrency.xslt" name="Save XSLT - BBCurrency.xslt" dest="xslt/request/cba" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/xslt/BBCurrency.xslt"/>
+			<deployResource description="Deploy EODPricing.xslt" name="Save XSLT - EODPricing" dest="xslt/request/reuters" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/xslt/EODPricing.xslt"/>
+
+			<deployResource description="Deploy Reuters Feed" name="Save Feed - RSUDSSLineByLine.xml" dest="xml/feeds/rsu" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/feeds/RSUDSSLineByLine.xml"/>
+			<deployResource description="Deploy RMDS Feed" name="Save Feed - rmdsfeeds.xml" dest="xml/feeds/rmds" destLoc="CFDataModel" encoding="UTF-8" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/resources/feeds/rmdsFeed.xml"/>
+			<!-- END - Customized Resources Installation -->
+
+			<!-- Customized Vendor Definitions Installation -->
+			<deployGSP description="Save CBA Vendor Definitions" name="Save CBA Vendor Definitions" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/BB_CBA_FutRolling.gsp"/>
+			<deployGSP description="Save CBA Vendor Definitions" name="Save CBA Vendor Definitions" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/BB_CBA_FUTSetup.gsp"/>
+			<deployGSP description="Save CBA Vendor Definitions" name="Save CBA Vendor Definitions" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/Bloomberg_Cancel_Scheduled_Feed.gsp"/>
+			<deployGSP description="Save CBA Vendor Definitions" name="Save CBA Vendor Definitions" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/CBA_Bloomberg.gsp"/>
+			<deployGSP description="Save CBA Vendor Definitions" name="Save CBA Vendor Definitions" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/CBA_CoppClark.gsp"/>
+			<deployGSP description="Save CBA Vendor Definitions" name="Save CBA Vendor Definitions" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/REUTERS.gsp"/>
+			<deployGSP description="Save CBA Vendor Definitions" name="Save CBA Vendor Definitions" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/ReutersCBA_EOD_ChainRIC.gsp"/>
+			<deployGSP description="Save CBA Vendor Definitions" name="Save CBA Vendor Definitions" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/RMDS.gsp"/>
+			<deployGSP description="Save CBA Vendor Definitions" name="Save CBA Vendor Definitions" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/ReutersDSS_INTRADAY_CBA_MaturityDate.gsp"/>
+			<!-- END - Customized Vendor Definitions Installation -->
+
+			<!-- Customized Message Types -->
+			<!--
+            <deployGSP description="Deploy CBA Migration Message Type" name="Save Message Type - CFG_SCHEDULE" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/vendordefinitions/MessageTypes/CFG_SCHEDULE.gsp"/>
+			-->
+			<!-- END - Customized Message Types -->
+
+			<!-- Customized Queries Installation -->
+			<deployGSP description="pub_CBA_MRU_FutureRolling" name="pub_CBA_MRU_FutureRolling Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/pub_CBA_MRU_FutureRolling.gsp"/>
+			<deployGSP description="pub_CBA_Manual_Golden_Price" name="pub_CBA_Manual_Golden_Price Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/pub_CBA_Manual_Golden_Price.gsp"/>
+			<deployGSP description="pub_CBA_MRU_Prices" name="pub_CBA_MRU_Prices Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/pub_CBA_MRU_Prices.gsp"/>
+			<deployGSP description="qry_CBA_RMDSReqRep" name="qry_CBA_RMDSReqRep Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/qry_CBA_RMDSReqRep.gsp"/>
+			<deployGSP description="WSSPublish" name="WSSPublish Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/WSSPublish.gsp"/>
+
+			<deployGSP description="WSSFXv0.1" name="WSSFXv0.1 Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/WSSFXv0.1.gsp"/>
+			<deployGSP description="WSSMMFv0.1" name="WSSMMFv0.1 Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/WSSMMFv0.1.gsp"/>
+			<deployGSP description="WSSMMYv0.1" name="WSSMMYv0.1 Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/WSSMMYv0.1.gsp"/>
+			<deployGSP description="Pub_CBA_newInstrumenstFUTURE" name="Pub_CBA_newInstrumenstFUTURE Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/Pub_CBA_newInstrumenstFUTURE.gsp"/>
+			<deployGSP description="pub_CBA_CollectMaturityDate" name="pub_CBA_CollectMaturityDate Query" destLoc="CFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/queries/pub_CBA_CollectMaturityDate.gsp"/>
+			
+			<!-- END - Customized Queries Installation -->			
+
+			<!-- Customized Workflow Installation -->
+			<deployGSP description="Deploy Workflow - CBAChainRequestReply.gsp" name="Deploy Workflow - CBAChainRequestReply.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/CBAChainRIC/CBAChainRequestReply.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBACustom_WF_DeleteFUT1Reuters.gsp" name="Deploy Workflow - CBACustom_WF_DeleteFUT1Reuters.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/CBAChainRIC/CBACustom_WF_DeleteFUT1Reuters.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBACustom_WF_DeleteFUT1BB.gsp" name="Deploy Workflow - CBACustom_WF_DeleteFUT1BB.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/FutureRolling/CBACustom_WF_DeleteFUT1BB.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - FutureRolling.gsp" name="Deploy Workflow - FutureRolling.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/FutureRolling/FutureRolling.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaAllPublish.gsp" name="Deploy Workflow - CbaAllPublish.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaAllPublish.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaManualGoldenPricePublish.gsp" name="Deploy Workflow - CbaManualGoldenPricePublish.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaManualGoldenPricePublish.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaMruPublish_FutureRolling_SelectInsert.gsp" name="Deploy Workflow - CbaMruPublish_FutureRolling_SelectInsert.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaMruPublish_FutureRolling_SelectInsert.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaMruPublish_SelectInsert.gsp" name="Deploy Workflow - CbaMruPublish_SelectInsert.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaMruPublish_SelectInsert.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaWssPublishing.gsp" name="Deploy Workflow - CbaWssPublishing.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaWssPublishing.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaWSSWrapper.gsp" name="Deploy Workflow - CbaWSSWrapper.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaWSSWrapper.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - XCOM.gsp" name="Deploy Workflow - XCOM.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/XCOM.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaRmdsRequestReply.gsp" name="Deploy Workflow - CbaRmdsRequestReply.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/RequestReply/CbaRmdsRequestReply.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBA_WF_4Eye_Consolidated.gsp" name="Deploy Workflow - CBA_WF_4Eye_Consolidated.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/CBACustomWorkflows/CBA_WF_4Eye_Consolidated.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBA_WF_BB_RequestCancel.gsp" name="Deploy Workflow - CBA_WF_BB_RequestCancel.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/CBACustomWorkflows/CBA_WF_BB_RequestCancel.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBA_WF_FileLoading.gsp" name="Deploy Workflow - CBA_WF_FileLoading.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/CBACustomWorkflows/CBA_WF_FileLoading.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBA_WF_MergeCalendar.gsp" name="Deploy Workflow - CBA_WF_MergeCalendar.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/CBACustomWorkflows/CBA_WF_MergeCalendar.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBA_WF_Spark.gsp" name="Deploy Workflow - CBA_WF_Spark.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/CBACustomWorkflows/CBA_WF_Spark.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBA_WF_ValidatenNotify.gsp" name="Deploy Workflow - CBA_WF_ValidatenNotify.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/CBACustomWorkflows/CBA_WF_ValidatenNotify.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - ReutersDSSRequestReply.gsp" name="Deploy Workflow - ReutersDSSRequestReply.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Custom/ReutersDSSRequestReply.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - ReutersRequestReply.gsp" name="Deploy Workflow - ReutersRequestReply.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Custom/Reuters/ReutersRequestReply.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - ReutersRequestReplyWrapper.gsp" name="Deploy Workflow - ReutersRequestReplyWrapper.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Custom/Reuters/ReutersRequestReplyWrapper.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - RSU Reuters Wait Files.gsp" name="Deploy Workflow - RSU Reuters Wait Files.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Custom/Reuters/RSU Reuters Wait Files.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - RsuReutersUpDownloadRequestReplySFTP.gsp" name="Deploy Workflow - RsuReutersUpDownloadRequestReplySFTP.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Custom/Reuters/RsuReutersUpDownloadRequestReplySFTP.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - BBScheduledWrapper.gsp" name="Deploy Workflow - BBScheduledWrapper.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Request Reply/Bloomberg/BBScheduledWrapper.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - Pricing Review And Approval.gsp" name="Deploy Workflow - Pricing Review And Approval.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Workstation User/Pricing Review And Approval.gsp" type="workflow"/> 
+			
+			<deployGSP description="Deploy Workflow - CbaMruTransferStaging.gsp" name="Deploy Workflow - CbaMruTransferStaging.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaMruTransferStaging.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaMruPublish_MaturityDate.gsp" name="Deploy Workflow - CbaMruPublish_MaturityDate.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaMruPublish_MaturityDate.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaAllPriceExist.gsp" name="Deploy Workflow - CbaAllPriceExist.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaAllPriceExist.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CbaMruPublish_MaturityDate.gsp" name="Deploy Workflow - CbaMruPublish_MaturityDate.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/CbaMruPublish_MaturityDate.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - XCOM.gsp" name="Deploy Workflow - XCOM.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/Cba/publish/XCOM.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBA_WF_Derivation.gsp" name="Deploy Workflow - CBA_WF_Derivation.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/CBACustomWorkflows/CBA_WF_Derivation.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBA_WF_FileLoad_MaturityDate.gsp" name="Deploy Workflow - CBA_WF_FileLoad_MaturityDate.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/CBACustomWorkflows/CBA_WF_FileLoad_MaturityDate.gsp" type="workflow"/> 
+			<deployGSP description="Deploy Workflow - CBA_WF_Reuters_MaturityDate.gsp" name="Deploy Workflow - CBA_WF_Reuters_MaturityDate.gsp" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/workflows/CBACustomWorkflows/CBA_WF_Reuters_MaturityDate.gsp" type="workflow"/> 
+			<!-- END - Customized Workflow Installation -->
+
+			<!-- Customized Events Installation -->
+			<deployGSP description="Deploy Event - CBAMergeCalendarData" name="Deploy Event - CBAMergeCalendarData" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/events/CBAMergeCalendarData.gsp" type="workflow"/>
+			<deployGSP description="Deploy Event - evt_CBA_4Eye_Consolidated" name="Deploy Event - evt_CBA_4Eye_Consolidated" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/events/evt_CBA_4Eye_Consolidated.gsp" type="workflow"/>
+			<deployGSP description="Deploy Event - evt_CBA_BBCreateCancelSchedule" name="Deploy Event - evt_CBA_BBCreateCancelSchedule" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/events/evt_CBA_BBCreateCancelSchedule.gsp" type="workflow"/>
+			<deployGSP description="Deploy Event - evt_CBA_ReutersUploadSchedule" name="Deploy Event - evt_CBA_ReutersUploadSchedule" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/events/evt_CBA_ReutersUploadSchedule.gsp" type="workflow"/>
+			<deployGSP description="Deploy Event - evt_CBA_Spark" name="Deploy Event - evt_CBA_Spark" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/events/evt_CBA_Spark.gsp" type="workflow"/>
+			
+			<deployGSP description="Deploy Event - evt_CBA_WSSPublish" name="Deploy Event - evt_CBA_WSSPublish" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/events/evt_CBA_WSSPublish.gsp" type="workflow"/>
+			<deployGSP description="Deploy Event - evt_CBA_CbaMruTransferStaging" name="Deploy Event - evt_CBA_CbaMruTransferStaging" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/events/evt_CBA_CbaMruTransferStaging.gsp" type="workflow"/>
+			<deployGSP description="Deploy Event - evt_CBA_CollectMaturityDate" name="Deploy Event - evt_CBA_CollectMaturityDate" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/events/evt_CBA_CollectMaturityDate.gsp" type="workflow"/>
+			<deployGSP description="Deploy Event - evt_CBA_Derivation" name="Deploy Event - evt_CBA_Derivation" destLoc="WFDataModel" patchLevel="8.7.1.01" src="tmp_CBA_Custom_Configuration/events/evt_CBA_Derivation.gsp" type="workflow"/>
+			<!-- END - Customized Events Installation -->
+
+
+			<!-- Customized Tasks Configuration -->
+			<deployGSP id="Deploy Task - CBA_Collection.gsp" destLoc="WFDataModel" name="Deploy Task - CBA_Collection.gsp" src="tmp_CBA_Custom_Configuration/tasks/CBA_Collection.gsp"/>
+			<deployGSP id="Deploy Task - CBA_ScheduleBloomberg.gsp" destLoc="WFDataModel" name="Deploy Task - CBA_ScheduleBloomberg.gsp" src="tmp_CBA_Custom_Configuration/tasks/CBA_ScheduleBloomberg.gsp"/>
+			<deployGSP id="Deploy Task - CBA_ScheduleReuters.gsp" destLoc="WFDataModel" name="Deploy Task - CBA_ScheduleReuters.gsp" src="tmp_CBA_Custom_Configuration/tasks/CBA_ScheduleReuters.gsp"/>
+			<deployGSP id="Deploy Task - CBA_Merge_Calendar_Data.gsp" destLoc="WFDataModel" name="Deploy Task - CBA_Merge_Calendar_Data.gsp" src="tmp_CBA_Custom_Configuration/tasks/CBA_Merge_Calendar_Data.gsp"/>
+			<deployGSP id="Deploy Task - tsk_CBA_Spark.gsp" destLoc="WFDataModel" name="Deploy Task - tsk_CBA_Spark.gsp" src="tmp_CBA_Custom_Configuration/tasks/tsk_CBA_Spark.gsp"/>
+			
+			<deployGSP id="Deploy Task - tsk_CBA_CbaMruTransferStaging.gsp" destLoc="WFDataModel" name="Deploy Task - tsk_CBA_CbaMruTransferStaging.gsp" src="tmp_CBA_Custom_Configuration/tasks/tsk_CBA_CbaMruTransferStaging.gsp"/>
+			<deployGSP id="Deploy Task - CBA_WSSPublish.gsp" destLoc="WFDataModel" name="Deploy Task - CBA_WSSPublish.gsp" src="tmp_CBA_Custom_Configuration/tasks/CBA_WSSPublish.gsp"/>
+			<deployGSP id="Deploy Task - CBA_CollectMaturityDate.gsp" destLoc="WFDataModel" name="Deploy Task - CBA_CollectMaturityDate.gsp" src="tmp_CBA_Custom_Configuration/tasks/CBA_CollectMaturityDate.gsp"/>
+			<deployGSP id="Deploy Task - CBA_Derivation.gsp" destLoc="WFDataModel" name="Deploy Task - CBA_Derivation.gsp" src="tmp_CBA_Custom_Configuration/tasks/CBA_Derivation.gsp"/>
+			<!-- END - Customized Tasks Configuration -->
+			
+			<!-- Customized Rule Configuration -->
+			<savedtd columnName="MSG_SET_BLOB" columnkeyname="XML_MSG_SET_ID" columnkeyvalue="1" description="Save Message Set in database" destLoc="GSDMDataModel" dtdFile="tmp_CBA_Custom_Configuration/reference/rulexml/msgtype.dtd" name="Save DTD"
+			         src="tmp_CBA_Custom_Configuration/reference/rulexml/StreetRefMsgSet_GC.xml" tableName="FT_T_XMGS" lastChgUsrId="CBA:CSTM"/>
+			<!-- END - Customized Rule Configuration -->
+			
+			<!-- Customized Configuration -->
+			<!--
+			<savelob columnName="XML_CONFIG_CLOB" columnkeyname="XML_CONFIG_MNEM" columnkeyvalue="ID_UNIQ" description="Save ID UNIQUESS AND LOOKUP Configuration in database" destLoc="GSDMDataModel"
+			         dtdFile="tmp_CBA_Custom_Configuration/reference/cfgxml/IDUniquenessCheckMatchKeySet.dtd" name="Save LOB" src="tmp_CBA_Custom_Configuration/reference/cfgxml/IDUniquenessCheckMatchKeySet.xml" tableName="FT_T_XCFG" lastChgUsrId="CBA:CSTM"/>
+			<savelob columnName="XML_CONFIG_CLOB" columnkeyname="XML_CONFIG_MNEM" columnkeyvalue="ID_UNIQ" description="Save ID UNIQUESS AND LOOKUP Configuration in database" destLoc="VDDBDataModel"
+			         dtdFile="tmp_CBA_Custom_Configuration/reference/cfgxml/IDUniquenessCheckMatchKeySet.dtd" name="Save LOB" src="tmp_CBA_Custom_Configuration/reference/cfgxml/IDUniquenessCheckMatchKeySet.xml" tableName="FT_T_XCFG" lastChgUsrId="CBA:CSTM"/>
+					 -->
+			<!-- END - Customized Configuration -->
+			
+		</Tasks>
+	</Deployment>
+</PackageDescription>
+

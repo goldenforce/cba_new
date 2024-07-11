@@ -1,0 +1,147 @@
+<GSServerApplication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.thegoldensource.com/2006/AND_1.0">
+    <Assembly>
+        <Resources>
+            <Databases>
+                <GSDM gsdm-usage="GoldenCopy" name="GSDM-1"/>
+                <GSDM gsdm-usage="VendorDetails" name="VDDB-1"/>
+            </Databases>
+            <Filesystems>
+                <!-- Local FTP Filesystem - enable if needed -->
+                <!-- <FTPFilesystem name="localftp"/> -->
+                <!-- Telekurs FTP Filesystem - enable if needed -->
+                <!-- <FTPFilesystem name="telekurs"/> -->
+                <!-- Reuters FTP Filesystem - enable if needed -->
+                <SFTPFilesystem name="reuterssftp/dss"/>
+                <!-- FTI-D FTP Filesystem - enable if needed -->
+                <!-- <FTPFilesystem name="idc/fts"/> -->
+                <!-- Bloomberg Backoffice FTP Filesystem - enable if needed -->
+                <!-- <BloombergFTPFilesystem bloombergFilePreparationMethod="Backoffice" name="backoffice"/> -->
+                <!-- Bloomberg Per Security FTP Filesystem - enable if needed -->
+                <BloombergSFTPFilesystem bloombergFilePreparationMethod="Per SecuritySFTP" name="persecuritysftp"/>
+                <!-- <BloombergFTPFilesystem bloombergFilePreparationMethod="Per Security" name="persecurity"/> -->
+                <!-- <BloombergFTPFilesystem binaryTransfer="true" decryptionKey="" name="persecurityFailOver"  password=""  server="" username=""  /> -->
+            </Filesystems>
+            <Engines>
+                <Engine gsdm="GSDM-1" name="TPS-1">
+                    <JVMParameter>-client</JVMParameter>
+                    <JVMParameter>-d64</JVMParameter>
+                    <JVMParameter>-Xmx16m</JVMParameter>
+                    <!--ReferenceSettings splitData="true" useTimeSeries="true" ruleLibraries="GenericRules;CamsRules;BenchmarkRules;SRJavaRules" tableLibraries="DynamicTO" cacheTableObjectResults="FT_T_MKID;FT_T_ISID;FT_T_GUNT;FT_T_INCL;FT_T_ISSU">
+            <ModelProcessing completenessOnly="true"/>  
+          </ReferenceSettings-->
+                    <!--PositionsSettings>
+            <PerformanceAgents>
+              <TimeLineAgents tracelevel="0"></TimeLineAgents>
+              <BalanceAgents sleepTime="10" timing="false" trace="false" tracelevel="0" bulk="true"></BalanceAgents> 
+              <SummaryAgents bulk="true" sleepTime="10" timing="false" trace="false" tracelevel="0" ></SummaryAgents>
+              <HistoryAgents sleepTime="10" timing="false" trace="false" tracelevel="0" bulkload="true"></HistoryAgents>
+            </PerformanceAgents>
+          </PositionsSettings-->
+                </Engine>
+                <Engine gsdm="GSDM-1" name="TPS-UI">
+                    <JVMParameter>-client</JVMParameter>
+                    <JVMParameter>-d64</JVMParameter>
+                    <JVMParameter>-Xmx16m</JVMParameter>
+                    <!--
+	    <PositionsSettings>
+	            <PerformanceAgents>
+	              <TimeLineAgents tracelevel="50"></TimeLineAgents>
+	              <BalanceAgents sleepTime="10" timing="true" trace="true" tracelevel="50" bulk="true"></BalanceAgents>
+	              <SummaryAgents bulk="true" sleepTime="10" timing="true" trace="true" tracelevel="50" ></SummaryAgents>
+	              <HistoryAgents sleepTime="10" timing="true" trace="true" tracelevel="50" bulkload="true"></HistoryAgents>
+	            </PerformanceAgents>
+	          </PositionsSettings> 
+	-->
+                </Engine>
+                <Engine gsdm="VDDB-1" name="TPS-VDDB">
+                    <JVMParameter>-client</JVMParameter>
+                    <JVMParameter>-d64</JVMParameter>
+                    <JVMParameter>-Xmx16m</JVMParameter>
+                </Engine>
+            </Engines>
+            <MSFTranslators>
+                <MSFTranslator name="MSFTranslator">
+                    <JVMParameter>-client</JVMParameter>
+                    <JVMParameter>-d64</JVMParameter>
+                    <JVMParameter>-Xmx192m</JVMParameter>
+                </MSFTranslator>
+            </MSFTranslators>
+            <MailServers>
+                <MailServer name="session"/>
+            </MailServers>
+            <JMSConnectionFactories/>
+            <JMSDestinations/>
+        </Resources>
+        <Services>
+            <MessageListeners/>
+        </Services>
+    </Assembly>
+    <Deployments>
+        <!--Note: For JBOSS EAP, the security attribute should always be TRUE, please do not change it-->
+        <Deployment applicationName="standardvddb" applicationType="All" domain="standardvddb" name="Default" publishingMode="local" secureApplication="true" securityLoginConfiguration="goldensource-domain-client">
+            <Logging databaseLogLevel="WARN" directory="${gs.log.path}" file="goldensource.orchestrator.log" fileLogLevel="INFO" maxLogFileCount="5" maxLogFileSize="10MB" timeout="5000"/>
+            <Resources>
+                <Databases>
+                    <Workflow jndi-name="jdbc/standardvddb/goldencopy"/>
+                    <Configuration jndi-name="jdbc/standardvddb/goldencopy"/>
+                    <ExceptionManagement jndi-name="jdbc/standardvddb/goldencopy"/>
+                    <Logging jndi-name="jdbc/standardvddb/logging"/>
+                    <BERepository jndi-name="jdbc/standardvddb/goldencopy"/>
+                    <InstallationRepository jndi-name="jdbc/standardvddb/installationrepository"/>
+                    <GSDM jndi-name="jdbc/standardvddb/goldencopy" name="GSDM-1"/>
+                    <GSDM jndi-name="jdbc/standardvddb/vendordetails" name="VDDB-1"/>
+                </Databases>
+                <Filesystems>
+                    <LocalFilesystem workingDirectory="/"/>
+                    <SFTPFilesystem keyfile="" name="reuterssftp/dss" password="Encrypted::47B4CA7431247411BCE1041138FC137B" port="22" proxyHost="10.225.161.1" proxyPort="1080" retryCount="3" server="hosted.datascope.reuters.com" timeOut="180" tmpDir="/home/weblogic/jboss-eap-7.0.4/vendor/reuters/dss" username="r160337" workingDirectory="/"/>
+                    <BloombergSFTPFilesystem keyfile="" name="persecuritysftp" password="Encrypted::A661B4FCB04E82629D9B73C20A6664C4BCE1041138FC137B" port="22" proxyHost="10.225.161.1" proxyPort="1080" retryCount="3" server="sftp.bloomberg.com" timeOut="360" tmpDir="/home/weblogic/jboss-eap-7.0.4/vendor/bb" username="dl790311" workingDirectory="/"/>
+                </Filesystems>
+                <Installations>
+                    <Installation databaseHome="${oracle.home}" databaseType="Oracle" destinationName="Engine Binaries" environmentName="CBA_TEST" goldenSourceBaseDirectory="${gs.bin.path}" name="DefaultInstallation"/>
+                </Installations>
+                <Engines>
+                    <Engine NLSLang="AMERICAN_AMERICA.AL32UTF8" installation="DefaultInstallation" logLevel="WARN" name="TPS-1" traceLevel="0" transactionTimeout="600">
+                        <EnvironmentVariables>
+                            <property name="CLASSPATH" value="${gs.bin.path}/ReferenceEngine/CustomJavaRules/CBACustomJavaRules.jar:${gs.bin.path}/ReferenceEngine/BRE/java/jbre.common.jar:${gs.bin.path}/ReferenceEngine/BRE/java/jbre.jar:${gs.bin.path}/ReferenceEngine/BRE/java/log4j.jar"/>
+                        </EnvironmentVariables>
+                        <PoolSettings maxSize="20" minSize="5" timeout="500"/>
+                    </Engine>
+                    <Engine NLSLang="AMERICAN_AMERICA.AL32UTF8" installation="DefaultInstallation" logLevel="WARN" name="TPS-UI" traceLevel="0" transactionTimeout="600">
+                        <EnvironmentVariables>
+                            <property name="CLASSPATH" value="${gs.bin.path}/ReferenceEngine/CustomJavaRules/CBACustomJavaRules.jar:${gs.bin.path}/ReferenceEngine/BRE/jbre.common.jar:${gs.bin.path}/ReferenceEngine/BRE/jbre.jar:${gs.bin.path}/ReferenceEngine/BRE/log4j.jar"/>
+                        </EnvironmentVariables>
+                        <PoolSettings maxSize="3" minSize="1" timeout="500"/>
+                    </Engine>
+                    <Engine NLSLang="AMERICAN_AMERICA.AL32UTF8" installation="DefaultInstallation" logLevel="WARN" name="TPS-VDDB" traceLevel="0" transactionTimeout="600">
+                        <EnvironmentVariables>
+                            <property name="CLASSPATH" value="${gs.bin.path}/ReferenceEngine/CustomJavaRules/CBACustomJavaRules.jar:${gs.bin.path}/ReferenceEngine/BRE/jbre.common.jar:${gs.bin.path}/ReferenceEngine/BRE/jbre.jar:${gs.bin.path}/ReferenceEngine/BRE/log4j.jar"/>
+                        </EnvironmentVariables>
+                        <PoolSettings maxSize="20" minSize="5" timeout="500"/>
+                    </Engine>
+                </Engines>
+                <MSFTranslators>
+                    <MSFTranslator errorLogLevel="0" installation="DefaultInstallation" instancesPerContainer="10" logLevel="WARN" name="MSFTranslator" traceLevel="0">
+                        <PoolSettings maxSize="40" minSize="10" timeout="500"/>
+                    </MSFTranslator>
+                </MSFTranslators>
+                <MailServers>
+                    <MailServer jndi-name="java:jboss/mail/Default" name="session"/>
+                </MailServers>
+            </Resources>
+            <Services statistics="false">
+                <ExtendedWorkManager maxConcurrentWork="80" maxReservedItemsPercent="300" maxThreadsPerGroup="80" minReservedItemsPercent="100"/>
+                <!-- 
+                <RMDSConfiguration dictionaryDirectory="/home/weblogic/jboss-eap-7.0.4/vendor/reuters/dict" outDirectory="/home/weblogic/jboss-eap-7.0.4/vendor/reuters/rmds" port="14002" position="10.228.86.17" user="gs_edm_dev"/>
+                 -->
+                <RMDSConfiguration dictionaryDirectory="/home/weblogic/jboss-eap-7.0.4/vendor/reuters/dict" outDirectory="/home/weblogic/jboss-eap-7.0.4/vendor/reuters/rmds" port="14002" position="10.228.66.129" user="mru_prod"/>
+                <WmDatenConfiguration password="" url="" user=""/>
+                <Scheduler name="Scheduler" threadCount="5" threadPriority="0"/>
+            </Services>
+            <SystemProperties>
+                <!-- Uncomment this to enable a default ProblemSolver configuration -->
+                <!-- <property name="com.thegoldensource.em.configuration" value="com/j2fe/exceptionmgmt/rules/rulesConfig.xml"/> -->
+            </SystemProperties>
+            <JBoss security-domain="goldensource-domain"/>
+        </Deployment>
+    </Deployments>
+</GSServerApplication>

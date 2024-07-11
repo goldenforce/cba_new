@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<ReportRequest xmlns="http://www.reuters.com/Datascope/ReportRequest.xsd">
+  <ReportTemplate xmlns:version="1">
+    <ReportAction>Replace</ReportAction>
+    <Name>CBA_EOD_ChainRIC</Name>
+    <EODPricing>
+      <OutputFormat>CSV</OutputFormat>
+      <Delimiter>None</Delimiter>
+      <Delivery>None</Delivery>
+      <Compression>None</Compression>
+      <ColumnHeaders>Yes</ColumnHeaders>
+      <CurrencyScaling>No</CurrencyScaling>
+      <Body>
+        <DataField>
+          <Name>User Defined Identifier</Name>
+          <FieldNumber>0</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Maturity Date</Name>
+          <FieldNumber>1</FieldNumber>
+          <DataFieldType>Date</DataFieldType>
+          <DateFormat>MM/dd/yyyy</DateFormat>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Asset Category</Name>
+          <FieldNumber>2</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Thomson Reuters Classification Scheme</Name>
+          <FieldNumber>3</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Settlement Price</Name>
+          <FieldNumber>4</FieldNumber>
+          <DataFieldType>Numeric</DataFieldType>
+          <DecimalPlaces>9</DecimalPlaces>
+          <DecimalSeparator>Period</DecimalSeparator>
+          <IntegerPlaces>12</IntegerPlaces>
+          <LeadingZeroes>No</LeadingZeroes>
+          <TrailingZeroes>No</TrailingZeroes>
+          <ThousandSeparator>No</ThousandSeparator>
+          <NegativePosition>Before</NegativePosition>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>RIC</Name>
+          <FieldNumber>5</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Underlying RIC</Name>
+          <FieldNumber>6</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>RIC Root</Name>
+          <FieldNumber>7</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Instrument ID</Name>
+          <FieldNumber>8</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Instrument ID Type</Name>
+          <FieldNumber>9</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Last Trading Day</Name>
+          <FieldNumber>10</FieldNumber>
+          <DataFieldType>Date</DataFieldType>
+          <DateFormat>MM/dd/yyyy</DateFormat>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Base Currency Code</Name>
+          <FieldNumber>11</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Currency Code</Name>
+          <FieldNumber>12</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+      </Body>
+    </EODPricing>
+  </ReportTemplate>
+</ReportRequest>

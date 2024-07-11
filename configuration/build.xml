@@ -1,0 +1,63 @@
+
+<project name="j4fe" default="build">
+	<!-- Specify all paths here, also only specify relative paths -->
+	<property name="build.dir" value="."/>
+	<property name="base.dir" value="../"/>
+	<property name="temp.dir" value="temp"/>
+	<property name="packages.dir" value="packages"/>
+	<property name="package.name" value="CBA_Custom_Configuration"/>
+	<property name="package.version" value="8.7.0.01"/>
+	<property name="package.type" value="Full"/>
+
+	
+	<target name="clean">
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.dir}" includes="**/*"/>
+		</delete>
+	</target>
+
+	<target name="prepare">
+		<tstamp>
+			<format property="today" pattern="yyyyMMdd" locale="en,UK"/>
+		</tstamp>
+	</target>
+
+	<target name="build.gc" depends="prepare">
+		<copy todir="${temp.dir}/configuration.files">
+			<fileset dir="${base.dir}/configuration"/>
+		</copy>
+
+		<copy todir="${temp.dir}/configuration.files">
+			<fileset dir="${base.dir}/configuration"/>
+		</copy>
+
+		<!-- move the sfile out of the temporary directory so they do not get packaged in the tar.gz file -->
+		<move file="${temp.dir}/configuration.files/PackageDescription.xml" tofile="${temp.dir}/PackageDescription.xml"/>
+		<move file="${temp.dir}/configuration.files/*Release_Notes*.docx" tofile="${temp.dir}/*Release_Notes*.docx" failonerror="false"/>
+
+		<!-- tar the copied files -->
+		<tar destfile="${temp.dir}/${package.name}.tar.gz" compression="gzip">
+			<tarfileset dir="${temp.dir}/configuration.files">
+				<include name="**"/>
+			</tarfileset>
+		</tar>
+
+		<!-- zip the files together with the release notes and the package description -->
+		<zip destfile="${temp.dir}/${package.name}_${package.version}_${package.type}_${today}.zip">
+			<fileset dir="${temp.dir}/">
+				<include name="${package.name}.tar.gz"/>
+				<include name="PackageDescription.xml"/>
+				<include name="*Release*Notes*.docx"/>
+			</fileset>
+		</zip>
+
+		<!-- 
+		<mkdir dir="${packages.dir}/${today}"/>
+		<move file="${package.name}_${package.version}_${package.type}_${today}.zip" todir="${packages.dir}/${today}"/>
+		-->
+		<move file="${temp.dir}/${package.name}_${package.version}_${package.type}_${today}.zip" todir="${packages.dir}"/>
+	</target>
+
+	<target name="build" depends="clean,build.gc">
+	</target>
+</project>

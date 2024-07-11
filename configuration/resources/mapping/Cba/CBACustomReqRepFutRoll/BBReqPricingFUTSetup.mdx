@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<MappingDef type="MSF" version="1.0">
+  <Options>
+    <Option key="MappingComment"/>
+    <Option key="MappingVersion">1.0.0.0</Option>
+    <Option key="MappingAuthor"/>
+    <Option key="MessageTranslatorVersion">8.1.1.1</Option>
+    <Option key="LastChangedTms">2018-05-11 at 06:06:46 AEST</Option>
+    <Option key="MappingDesignerVersion">8.7.1.02</Option>
+  </Options>
+  <Input vendorType="BB_BULK">
+    <Options>
+      <Option key="DecimalSeparator">.</Option>
+      <Option key="DDLName"/>
+      <Option key="TrimFields">BOTH</Option>
+      <Option key="CommentMarker">#</Option>
+      <Option key="NullIdentifiers">N.A.</Option>
+      <Option key="CAXTypeField"/>
+      <Option key="InputDataDelimiter">|</Option>
+      <Option key="QuotationMark"/>
+      <Option key="EscapeCharacter"/>
+      <Option key="MessageType"/>
+      <Option key="DateTimeFormat">%Y%M%D%H%I%S</Option>
+    </Options>
+    <Layout>
+      <Override/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="TICKER" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="TICKER" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="PX_SETTLE" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="PX_SETTLE" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="SECURITY_TYP" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="SECURITY_TYP" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="LAST_TRADEABLE_DT" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="LAST_TRADEABLE_DT" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="OPT_EXPIRE_DT" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="OPT_EXPIRE_DT" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="MATURITY" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="MATURITY" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="BASE_CRNCY" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="BASE_CRNCY" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="CRNCY" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="CRNCY" pattern="" pos="0" readonly="false" type="String"/>
+    </Layout>
+  </Input>
+  <Output>
+    <Options>
+      <Option key="DateTimeOutputFormat">%M-%D-%Y %H:%I:%S %A</Option>
+      <Option key="OutputEncoding">UTF-8</Option>
+      <Option key="DefaultEmptyNumericsToZero">FALSE</Option>
+    </Options>
+    <MappingFragments/>
+    <OutputDef>
+      <Node messageformat="GSREF" name="STREET_REF" type="message">
+        <Options>
+          <Option key="OutputEncoding"/>
+          <Option key="SystemId">fti://repository/dtd/STREET_REF</Option>
+          <Option key="DocType">STREET_REF</Option>
+        </Options>
+        <condition><![CDATA[if (AllHaveValue(OneHasValue(MATURITY, OPT_EXPIRE_DT, LAST_TRADEABLE_DT),PX_SETTLE))
+	return "TRUE";
+else
+	return "FALSE";]]></condition>
+        <Node name="USERID" type="attribute">
+          <expr><![CDATA[return "GUEST";]]></expr>
+        </Node>
+        <Node name="HEADER" type="element">
+          <Node name="ASOFDATE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ATTRLOCK" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CALID" type="element">
+            <Node name="VALUE" type="attribute"/>
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="TRANSLATE" type="attribute"/>
+            <Node name="STRIP_FAILED_DOMAIN" type="attribute"/>
+            <Node name="DEFAULT" type="attribute"/>
+            <Node name="ERR_LVL" type="attribute"/>
+          </Node>
+          <Node name="CHECKLASTDBUPDATE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "N";]]></expr>
+            </Node>
+          </Node>
+          <Node name="CHGAPPRTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "N";]]></expr>
+            </Node>
+          </Node>
+          <Node name="CNTRYCDE" type="element">
+            <Node name="VALUE" type="attribute"/>
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="TRANSLATE" type="attribute"/>
+            <Node name="STRIP_FAILED_DOMAIN" type="attribute"/>
+            <Node name="DEFAULT" type="attribute"/>
+            <Node name="ERR_LVL" type="attribute"/>
+          </Node>
+          <Node name="CURRENTTIMESTAMP" type="element">
+            <expr><![CDATA[return TimeStamp();]]></expr>
+          </Node>
+          <Node name="DATAID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATAIDCTXT" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATASOURCE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "BB";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DONOTPOST" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="EMPLOYEE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="TRANSLATE" type="attribute"/>
+            <Node name="STRIP_FAILED_DOMAIN" type="attribute"/>
+            <Node name="DEFAULT" type="attribute"/>
+            <Node name="ERR_LVL" type="attribute"/>
+          </Node>
+          <Node name="ISSUEACTIONREPLACE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSUELOCK" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSUERDERIVATIONMODE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "N";]]></expr>
+            </Node>
+          </Node>
+          <Node name="LOCALE" type="element">
+            <Node name="NLS" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="TIMEZONE" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return TICKER;]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID_CTXT_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "TICKER";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_TYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MAIN_ENTITY_NME" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MAIN_ENTITY_TBL_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ISSU";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MERGEMESSAGE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MSGCLASSIFICATION" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "BBRRPRC";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MSGSET" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MSGTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="TRANSLATE" type="attribute"/>
+            <Node name="STRIP_FAILED_DOMAIN" type="attribute"/>
+            <Node name="DEFAULT" type="attribute"/>
+            <Node name="ERR_LVL" type="attribute"/>
+          </Node>
+          <Node name="ORGID" type="element">
+            <Node name="VALUE" type="attribute"/>
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="TRANSLATE" type="attribute"/>
+            <Node name="STRIP_FAILED_DOMAIN" type="attribute"/>
+            <Node name="DEFAULT" type="attribute"/>
+            <Node name="ERR_LVL" type="attribute"/>
+          </Node>
+          <Node name="PUBLISH" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="REALMSG" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="REFDATA" type="element"/>
+          <Node name="REFERRINGPAGE" type="element"/>
+          <Node name="ROLLBACKONSEGMENTERROR" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SECURITYLABEL" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRANSLATE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRILLIUM" type="element">
+            <Node name="FORCENEWENTITY" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="TRILLIUMTABLEID" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="TRILLIUMTABLETYPE" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+          </Node>
+          <Node name="USERID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="VENDORRECORDID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="VENDORTYPE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="VTTRMSGSET" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+        </Node>
+        <Node name="Issue" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "UNKNOWN";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "Issue";]]></expr>
+          </Node>
+          <Node name="ALTASSETCLASSTXT" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="AVREXEMPTIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="BNCHOID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CLTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CNVRTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CREATEDDATAPROVID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CREATEDREDISTRIBUTORID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CREATEDTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CRMATDTEEXTNDLNEDTE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CRMATEXPDTEEXTNTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATAREDISTRIBUTORID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "BB";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DAYSETTLEQTY" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DECPRECNUM" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DENOMCURRCDE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DFLTSTATTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DFLTTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DFLTTRDNGSTATTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DISTRIBUTIONCURRCDE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DLVIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DLVREASCDE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="EISTOID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ENDTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="EUROCNVRTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINALMATTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FOREIGNCUSTODYIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GOVTSUPPIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GUARANTEEDIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GUARANTORTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GUARANTYRESTRICTIONSTXT" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GUARANTYTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="HYBRIDIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ILLIQUIDITYIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INCBASTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INDIVCERTIFIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRISSRID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INVSCLOSEDTE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISCDOID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSACTVYSTATREASTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSACTVYSTATTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSACTVYSTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSALPHSRCHTXT" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSOBJTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSRATETXT" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSTENORTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return SECURITY_TYP;]]></expr>
+            </Node>
+            <Node name="TRANSLATE" type="attribute">
+              <expr><![CDATA[return "YES";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSUTCQTY" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSUTMEASTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSYRTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGUSRID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "BB";]]></expr>
+            </Node>
+          </Node>
+          <Node name="LIQUIDRIGHTRANKTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MAINRISKTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MANDCNVRIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MATDTEEXTNDLNEDTE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MATDTETYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MATEXPDTEEXTNTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MATEXPTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[if (OneHasValue(MATURITY))
+	return Transform2FTIDate(MATURITY, "YYYYMMDD");
+else if (OneHasValue(OPT_EXPIRE_DT))
+	return Transform2FTIDate(OPT_EXPIRE_DT,"YYYYMMDD");
+else if (OneHasValue(LAST_TRADEABLE_DT))
+	return Transform2FTIDate(LAST_TRADEABLE_DT,"YYYYMMDD");
+else
+	return "";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MATTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MATVALLNKTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MINNETWORTHBALIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTLISTTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MONITORRESTRICTIONCDE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MOSTFAVOREDLENDERIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="NOMVALUNITCAMT" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="NOTTRADABLEIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ORIGDATAPROVID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ORIGMATEXPTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PARTFULLPDTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PARVALUETYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCMLTPLRCRTE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PREFIDCTXTTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PREFISSDESC" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PREFISSID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PREFISSNME" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PREMRSRVFUNDELIGIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRINBASTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRINNOTLIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="REISSUETMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="REPACKAGEDSECIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="RTNGMAINTPROVSIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SECFORMTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SECLENDINGELIGIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SERIESTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="STARTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return TimeStamp(); ]]></expr>
+            </Node>
+          </Node>
+          <Node name="STRUCTUREDSECFEATTXT" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="STRUCTUREDSECIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBSTITUTIONCLAUSEIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TBAELIGTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDGRSTTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TSFRRSTIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TYPEARNFORLIFECDE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="WHENISSUEDIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="WTHHLDTAXIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="WTHHLDTAXLEVIEDSRCIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+        </Node>
+        <Node name="IssueIdentifier" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "UNKNOWN";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "IssueIdentifier";]]></expr>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "BB";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ENDTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ERGONOMICSYMBOLIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GLOBALUNIQIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "N";]]></expr>
+            </Node>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "TICKER";]]></expr>
+            </Node>
+          </Node>
+          <Node name="INSTMNEM" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRSYMBOLSTATTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISIDOID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return TICKER;]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSTENORTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSUSAGETYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return TimeStamp();]]></expr>
+            </Node>
+          </Node>
+          <Node name="LASTCHGUSRID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "BB";]]></expr>
+            </Node>
+          </Node>
+          <Node name="LISTINGSYMBOLIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MERGEUNIQOID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTOID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MULTISEDOLSYMBOLIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="NOTTRADABLEIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ORIGDATAPROVID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRELIMTERMPRSPCTUSIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRIMTRDMRKTQUOTEIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ROOTSYMBOLMNEM" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SRCECURRCDE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="STARTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return TimeStamp(); ]]></expr>
+            </Node>
+          </Node>
+          <Node name="TRADERSYMBOLIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDNGCURRCDE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRGTCURRCDE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="WHENDISTRIBUTEDIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="WHENISSUEDIND" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+        </Node>
+        <Node name="ForeignExchangeCharacteristics" type="segment">
+          <condition><![CDATA[if (AllHaveValue(BASE_CRNCY, CRNCY))
+	return "ForeignExchangeCharacteristics";
+else
+	return "";]]></condition>
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "UNKNOWN";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ForeignExchangeCharacteristics";]]></expr>
+          </Node>
+          <Node name="CRSRTESCLCAMT" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ENDTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FNLFXCRTE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FNLFXFINSRLTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FNLFXINSTMNEM" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FNLFXRTETMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FXCHOID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FXDEALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "FX";]]></expr>
+            </Node>
+          </Node>
+          <Node name="FXDLNETMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FXPARTYTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FXUNDERLYTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INITFXCRTE" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INITFXFINSRLTYP" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INITFXINSTMNEM" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INITFXRTETMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGUSRID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="NOMTENORMNEM" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SRCECURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return BASE_CRNCY;]]></expr>
+            </Node>
+          </Node>
+          <Node name="STARTTMS" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRGTCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return CRNCY;]]></expr>
+            </Node>
+          </Node>
+        </Node>
+      </Node>
+    </OutputDef>
+  </Output>
+  <Translation/>
+  <Expressions>
+    <Expression enabled="false" ident="KeyStreaming">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+    <Expression enabled="false" ident="RecordIdentifier">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+    <Expression enabled="false" ident="GSDMFiltering">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+    <Expression enabled="false" ident="VDSFiltering">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+  </Expressions>
+</MappingDef>

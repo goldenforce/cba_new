@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<ReportRequest xmlns="http://www.reuters.com/Datascope/ReportRequest.xsd">
+  <ReportTemplate xmlns:version="1">
+    <ReportAction>Replace</ReportAction>
+    <Name>CBA_DSS_INTRADAY_MATURITY</Name>
+    <IntradayPricing>
+      <OutputFormat>CSV</OutputFormat>
+      <Delimiter>None</Delimiter>
+      <Delivery>None</Delivery>
+      <Compression>GZip</Compression>
+      <ColumnHeaders>Yes</ColumnHeaders>
+      <CurrencyScaling>No</CurrencyScaling>
+      <Body>
+        <DataField>
+          <Name>RIC</Name>
+          <FieldNumber>0</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+        <DataField>
+          <Name>Term</Name>
+          <FieldNumber>1</FieldNumber>
+          <DataFieldType>Text</DataFieldType>
+          <WidthStyle>Variable</WidthStyle>
+          <Justification>Left</Justification>
+          <Capitalization>None</Capitalization>
+        </DataField>
+      </Body>
+    </IntradayPricing>
+  </ReportTemplate>
+</ReportRequest>

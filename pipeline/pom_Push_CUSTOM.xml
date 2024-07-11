@@ -1,0 +1,93 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>cmteam.thegoldensource</groupId>
+	<artifactId>custom</artifactId>
+	<version>8.7.2.01</version>
+	
+	<name>point72 Package</name>
+	
+	<properties>
+		<Release_Version_Custom>8.7.2.01</Release_Version_Custom>
+		<Repo>Dev</Repo>
+	</properties>
+	
+	<distributionManagement>
+		<repository>
+			<id>repo_mumbai</id>
+			<name>Artifactory</name>
+			<url>http://cmsif:8082/artifactory/Dev/</url>
+		</repository>
+	</distributionManagement>
+	
+	<build>
+		<plugins>
+			
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>Packages-Zip</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>							
+						   <target name="Zip-All-Packages">
+							   <zip destfile="FinalCustomPackage/Custom_Release_Packages_${Release_Version_Custom}.zip" basedir="../custom/configuration/packages" includes="*.zip"/>								   
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Releases</id>
+						<goals>
+							<goal>deploy-file</goal>
+						</goals>
+						<phase>deploy</phase>
+						<configuration>
+							<repositoryId>repo_mumbai</repositoryId>
+							<url>http://cmsif:8082/artifactory/Dev/</url>
+							<file>${basedir}/FinalCustomPackage/Custom_Release_Packages_${Release_Version_Custom}.zip</file>
+							<groupId>cm.autoinstall</groupId>
+                            <artifactId>custom</artifactId>
+                            <version>${Release_Version_Custom}</version>
+                            <packaging>zip</packaging>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+						<configuration>
+							<excludeDefaultDirectories>true</excludeDefaultDirectories>
+							<filesets>
+								<fileset>
+									<directory>FinalCustomPackage</directory>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+		</plugins>
+	</build>
+	
+</project>

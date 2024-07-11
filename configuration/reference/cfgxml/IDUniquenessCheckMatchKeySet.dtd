@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT IDUniquenessCheckMatchKeySet (ENTITY+)>
+<!ELEMENT ENTITY (IDENTIFIER)*>
+<!ATTLIST ENTITY
+        NAME CDATA #REQUIRED 
+        TYPE (ISSU | ISSR | MRKT | FINS | FINR | CUST | EMPL | MRKX | EMRL | ACCT | DLER | DLBR | DREP | FPRO | BNCH) #REQUIRED 
+        MATCH_FIELD CDATA #REQUIRED
+        NEED_PREVALIDATION (Y|N|TRUE|FALSE) "N" 
+        LOOKUPID_REQUIRED (Y|N|TRUE|FALSE) "N" 
+        PRIMARY_IDENTIFIER CDATA ""
+        DUMMY_ACTIVITY_STATUS CDATA ""
+        ENDDATE_MISMATCH_IDENTIFIER (Y|N|TRUE|FALSE) "N" >
+<!ELEMENT IDENTIFIER (MATCHKEYSET)*>
+<!ATTLIST IDENTIFIER
+	SEGMENT_TYPE (IssueIdentifier | IssuerIdentifier | FinsRoleIdentifier | FinancialMarketIdentifier | FinancialInstitutionIdentifier | CustomerIdentifier | EmployeeIdentifier | MarketIndexAlternateIdentifier | EmployeeRoleIdentifier
+	             |DealerAlternateIdentifier | DealerBranchAlternateIdentifier | DealerRepresentativeAlternateIdentifier | FinsServicesProAltIdentifier | BNCHIdentifier) #REQUIRED
+	FLD_CTXT CDATA #REQUIRED
+	FLD_ID CDATA #REQUIRED>
+<!ELEMENT MATCHKEYSET EMPTY>
+<!ATTLIST MATCHKEYSET
+	ID_CONTEXT CDATA #REQUIRED
+	MATCH CDATA #REQUIRED
+ 	ERRLVL_LKUP_NOTFND ( ERROR | FATAL)  #IMPLIED
+ 	UNIQUE_ACROSS_MARKET ( TRUE | FALSE)  #IMPLIED>

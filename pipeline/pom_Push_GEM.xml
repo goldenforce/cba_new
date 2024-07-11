@@ -1,0 +1,50 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>cmteam.thegoldensource</groupId>
+	<artifactId>GEM</artifactId>
+	<version>8.7.2.01</version>
+	
+	<name>DB Package</name>
+
+	<distributionManagement>
+		<repository>
+			<id>repo_mumbai</id>
+			<name>Artifactory</name>
+			<url>http://cmsif:8082/artifactory/Dev/</url>
+		</repository>
+	</distributionManagement>
+	
+	<properties>
+		<Release_Version_GEM>8.7.2.01</Release_Version_GEM>
+	</properties>
+	
+	<build>
+		<plugins>
+			
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Releases</id>
+						<goals>
+							<goal>deploy-file</goal>
+						</goals>
+						<phase>deploy</phase>
+						<configuration>
+							<repositoryId>Artifactory</repositoryId>
+							<url>http://cmdock20:8081/artifactory/libs-release-local</url>
+							<file>${basedir}/GEM/Full_8_7_2_02_GEM.zip</file>
+							<groupId>org.thegoldensource</groupId>
+                            <artifactId>gem</artifactId>
+                            <version>${Release_Version_GEM}</version>
+                            <packaging>zip</packaging>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+		</plugins>
+	</build>
+	
+</project>

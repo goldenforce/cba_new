@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ReportRequest xmlns="http://www.reuters.com/Datascope/ReportRequest.xsd">
+  <Schedule>
+    <ScheduleAction>Replace</ScheduleAction>
+    <Name>CBA_ReutersDSS_IntraDay_UnderlyingMaturity</Name>
+    <IntradayPricingSchedule>
+      <InputList>
+        <Name>CBA_Maturity_InstrList</Name>
+        <Type>Instrument</Type>
+      </InputList>
+      <ReportTemplate>
+        <Name>CBA_ReutersDSS_IntraDay_UnderlyingMaturity</Name>
+        <Type>IntradayPricing</Type>
+      </ReportTemplate>
+      <OutputFileName>CBA_Reuters_Intra_Maturitydate.csv</OutputFileName>
+      <ScheduleTimezone>GMT Standard Time</ScheduleTimezone>
+      <ScheduleWeekly>
+        <DayOfWeek>Monday</DayOfWeek>
+        <DayOfWeek>Tuesday</DayOfWeek>
+        <DayOfWeek>Wednesday</DayOfWeek>
+        <DayOfWeek>Thursday</DayOfWeek>
+        <DayOfWeek>Friday</DayOfWeek>
+        <Type>LastUpdate</Type>
+      </ScheduleWeekly>
+      <ScheduleTime>
+        <Hour>3</Hour>
+        <Minute>15</Minute>
+      </ScheduleTime>
+    </IntradayPricingSchedule>
+  </Schedule>
+</ReportRequest>

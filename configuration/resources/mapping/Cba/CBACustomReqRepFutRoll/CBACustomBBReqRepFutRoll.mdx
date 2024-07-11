@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<MappingDef type="MSF" version="1.0">
+  <Options>
+    <Option key="MappingComment"/>
+    <Option key="MappingVersion">1.0.0.0</Option>
+    <Option key="MappingAuthor"/>
+    <Option key="MessageTranslatorVersion">8.1.1.1</Option>
+    <Option key="LastChangedTms">2018-02-15 at 06:13:52 IST</Option>
+    <Option key="MappingDesignerVersion">8.7.1.01</Option>
+  </Options>
+  <Input vendorType="BB_BULK">
+    <Options>
+      <Option key="DecimalSeparator">.</Option>
+      <Option key="DDLName"/>
+      <Option key="TrimFields">BOTH</Option>
+      <Option key="CommentMarker">#</Option>
+      <Option key="NullIdentifiers">N.A.</Option>
+      <Option key="CAXTypeField"/>
+      <Option key="InputDataDelimiter">|</Option>
+      <Option key="QuotationMark"/>
+      <Option key="EscapeCharacter"/>
+      <Option key="MessageType"/>
+      <Option key="DateTimeFormat">%Y%M%D%H%I%S</Option>
+    </Options>
+    <Layout>
+      <Override/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="NAME" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="NAME" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="SECURITY_TYP" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="SECURITY_TYP" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="ID_BB_UNIQUE" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="ID_BB_UNIQUE" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="ID_BB_COMPANY" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="ID_BB_COMPANY" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="ID_BB_SECURITY" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="ID_BB_SECURITY" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="TICKER" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="TICKER" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="BH_FUT_CHAIN" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="BH_FUT_CHAIN" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="" excludedNullIdentifiers="" ident="ID_BB_GLOBAL" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="ID_BB_GLOBAL" pattern="" pos="0" readonly="false" type="String"/>
+      <record desc="" ident="FUT_CHAIN" mandatory="false" mapable="true" multiple="true" name="FUT_CHAIN">
+        <field decimals="0" desc="" excludedNullIdentifiers="" ident="SECURITY_DES" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="SECURITY_DES" pattern="" pos="0" readonly="false" type="String"/>
+      </record>
+    </Layout>
+  </Input>
+  <Output>
+    <Options>
+      <Option key="DateTimeOutputFormat">%M-%D-%Y %H:%I:%S %A</Option>
+      <Option key="OutputEncoding">UTF-8</Option>
+      <Option key="DefaultEmptyNumericsToZero">FALSE</Option>
+    </Options>
+    <MappingFragments/>
+    <OutputDef>
+      <Node messageformat="GSREF" name="STREET_REF" type="message">
+        <Options>
+          <Option key="xsd">STREET_REF.gsref.xsd</Option>
+          <Option key="OutputEncoding"/>
+          <Option key="SystemId">fti://repository/dtd/STREET_REF</Option>
+          <Option key="DocType">STREET_REF</Option>
+        </Options>
+        <Node name="USERID" type="attribute">
+          <expr><![CDATA[return "GUEST";]]></expr>
+        </Node>
+        <ForEach recordType="FUT_CHAIN">
+          <Do>
+            <Node name="FutureComodityFieldOfinterest" type="segment">
+              <Node name="ACTION" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+              <Node name="TYPE" type="attribute">
+                <expr><![CDATA[return "FutureComodityFieldOfinterest";]]></expr>
+              </Node>
+              <Node name="CURRENTSTATUS" type="element">
+                <Node name="VALUE" type="attribute"/>
+              </Node>
+              <Node name="ENDTMS" type="element">
+                <Node name="VALUE" type="attribute"/>
+              </Node>
+              <Node name="FUTCHAIN" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return FUT_CHAIN.SECURITY_DES;]]></expr>
+                </Node>
+              </Node>
+              <Node name="IDBBUNIQUE" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return ID_BB_UNIQUE;]]></expr>
+                </Node>
+              </Node>
+              <Node name="LASTCHGTMS" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return TimeStamp();]]></expr>
+                </Node>
+              </Node>
+              <Node name="LASTCHGUSRID" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return "BB";]]></expr>
+                </Node>
+              </Node>
+              <Node name="SECNAME" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return NAME;]]></expr>
+                </Node>
+              </Node>
+              <Node name="SECURITYTYP" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return SECURITY_TYP;]]></expr>
+                </Node>
+              </Node>
+              <Node name="STARTTMS" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return TimeStamp();]]></expr>
+                </Node>
+              </Node>
+              <Node name="STATUSDESC" type="element">
+                <Node name="VALUE" type="attribute"/>
+              </Node>
+              <Node name="TICKERID" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return TICKER;]]></expr>
+                </Node>
+              </Node>
+            </Node>
+          </Do>
+        </ForEach>
+      </Node>
+    </OutputDef>
+  </Output>
+  <Translation/>
+  <Expressions>
+    <Expression enabled="false" ident="KeyStreaming">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+    <Expression enabled="false" ident="RecordIdentifier">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+    <Expression enabled="false" ident="GSDMFiltering">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+    <Expression enabled="false" ident="VDSFiltering">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+  </Expressions>
+</MappingDef>

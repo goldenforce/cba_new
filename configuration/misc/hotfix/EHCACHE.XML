@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.sourceforge.net/ehcache.xsd">
+<diskStore path="java.io.tmpdir"/>
+<cacheManagerPeerProviderFactory class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory" properties="peerDiscovery=manual, rmiUrls=${rmiReplicationHostName}"/>
+<cacheManagerPeerListenerFactory class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory" properties="port=11115"/>
+
+    
+    
+
+
+    
+
+    <defaultCache maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="false" diskPersistent="false" diskExpiryThreadIntervalSeconds="120">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</defaultCache>
+
+    
+
+	
+    <cache name="com.j2fe.workflow.runtime.Token" maxElementsInMemory="20000" eternal="false" overflowToDisk="false" timeToIdleSeconds="360">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="com.j2fe.workflow.runtime.Token.persistentVariables" maxElementsInMemory="80000" eternal="false" overflowToDisk="false" timeToIdleSeconds="360">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+    <cache name="com.j2fe.workflow.runtime.Token.joinTokens" maxElementsInMemory="50" eternal="false" overflowToDisk="false" timeToIdleSeconds="120" timeToLiveSeconds="120">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="com.j2fe.workflow.runtime.WorkflowInstance" maxElementsInMemory="100" eternal="false" overflowToDisk="false" timeToIdleSeconds="60">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="com.j2fe.workflow.runtime.WorkflowInstance.variables" maxElementsInMemory="100" eternal="false" overflowToDisk="false" timeToIdleSeconds="180">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="com.j2fe.workflow.runtime.WorkflowInstance.endTokens" maxElementsInMemory="100" eternal="false" overflowToDisk="false" timeToIdleSeconds="360">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+    <cache name="com.j2fe.streetlamp.Transaction" maxElementsInMemory="2000" eternal="false" overflowToDisk="false" timeToIdleSeconds="120" timeToLiveSeconds="120">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+		
+
+	
+    <cache name="com.j2fe.streetlamp.StreetLampSource" maxElementsInMemory="20" eternal="true" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="com.j2fe.event.ApplicationEvent" maxElementsInMemory="100" eternal="true" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+    <cache name="com.j2fe.event.ApplicationEvent.parameter" maxElementsInMemory="100" eternal="true" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="com.j2fe.processing.MessageType" maxElementsInMemory="200" eternal="true" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+    <cache name="com.j2fe.processing.MessageType.publishingEvents" maxElementsInMemory="200" eternal="true" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+    <cache name="com.j2fe.processing.MessageType.metaData" maxElementsInMemory="200" eternal="true" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="org.hibernate.cache.UpdateTimestampsCache" maxElementsInMemory="5000" eternal="true" overflowToDisk="true">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+    <cache name="org.hibernate.cache.StandardQueryCache" maxElementsInMemory="500" eternal="true" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="com.j2fe.processing.DataSource" maxElementsInMemory="100" eternal="true" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="com.j2fe.processing.BusinessFeed" maxElementsInMemory="100" eternal="true" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+	
+    <cache name="com.j2fe.streetlamp.definition.NotificationDefinition" maxElementsInMemory="2000" eternal="false" overflowToDisk="false" timeToIdleSeconds="600">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+    <cache name="com.j2fe.translation.template.QueryDefinition" maxElementsInMemory="100" eternal="false" overflowToDisk="false" timeToIdleSeconds="600">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+    <cache name="com.j2fe.exceptionmgmt.ProblemGrouper" maxElementsInMemory="200" eternal="false" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+    <cache name="com.j2fe.exceptionmgmt.ProblemSolver" maxElementsInMemory="200" eternal="false" overflowToDisk="false">
+<cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory" properties="replicateAsynchronously=false, replicateUpdatesViaCopy=false, replicatePuts=false"/>
+</cache>
+
+ 
+    
+
+</ehcache>

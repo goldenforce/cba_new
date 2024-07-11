@@ -1,0 +1,3713 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<MappingDef type="MSF" version="1.0">
+  <Options>
+    <Option key="MappingComment"/>
+    <Option key="MappingVersion">1.0.0.0</Option>
+    <Option key="MappingAuthor"/>
+    <Option key="MessageTranslatorVersion">8.1.1.1</Option>
+    <Option key="LastChangedTms">2019-08-23 at 02:27:16 IST</Option>
+    <Option key="MappingDesignerVersion">8.7.1.10</Option>
+  </Options>
+  <Input vendorType="BB_BULK">
+    <Options>
+      <Option key="DecimalSeparator">.</Option>
+      <Option key="TrimFields">BOTH</Option>
+      <Option key="CommentMarker">#</Option>
+      <Option key="NullIdentifiers">N.A.</Option>
+      <Option key="QuotationMark"/>
+      <Option key="DDLName"/>
+      <Option key="IsSingleCharDataDelimiter">TRUE</Option>
+      <Option key="CAXTypeField"/>
+      <Option key="InputDataDelimiter">,</Option>
+      <Option key="TimeStampFormat">%Y%M%D%H%I%S.%f</Option>
+      <Option key="EscapeCharacter"/>
+      <Option key="MessageType"/>
+      <Option key="DateTimeFormat">%Y%M%D%H%I%S</Option>
+    </Options>
+    <Layout>
+      <Override/>
+      <field decimals="0" desc="Price date" excludedNullIdentifiers="" ident="vd" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="vd" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="Non Precious metals Name" excludedNullIdentifiers="" ident="asset" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="asset" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="Currency" excludedNullIdentifiers="" ident="Currency" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="Currency" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="option contract" excludedNullIdentifiers="" ident="opt contract" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="opt_contract" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="spot rate" excludedNullIdentifiers="" ident="spot" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="spot" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="fut expiry date in YYYYMMDD format" excludedNullIdentifiers="" ident="fut expiry" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="fut_expiry" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="opt expiry date in YYYYMMDD format" excludedNullIdentifiers="" ident="opt expiry" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="opt_expiry" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="forward rate" excludedNullIdentifiers="" ident="fwd" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="fwd" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="Non Deliverable Future delta Point" excludedNullIdentifiers="" ident="NDFdelta" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="NDFdelta" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="Non Deliverable Future Vol rate" excludedNullIdentifiers="" ident="NDFvol" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="NDFvol" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="Deliverable Future delta Point" excludedNullIdentifiers="" ident="DFdelta" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="DFdelta" pattern="" pos="0" readonly="false" type="String"/>
+      <field decimals="0" desc="Deliverable Future Vol rate" excludedNullIdentifiers="" ident="DFvol" length="255" mandatory="false" mapable="true" match="false" multiple="false" name="DFvol" pattern="" pos="0" readonly="false" type="String"/>
+    </Layout>
+  </Input>
+  <Output>
+    <Options>
+      <Option key="TimeStampOutputFormat">%M-%D-%Y %H:%I:%S.%f %A</Option>
+      <Option key="DateTimeOutputFormat">%M-%D-%Y %H:%I:%S %A</Option>
+      <Option key="OutputEncoding">UTF-8</Option>
+      <Option key="DefaultEmptyNumericsToZero">FALSE</Option>
+      <Option key="AddTZIndicators">true</Option>
+    </Options>
+    <MappingFragments/>
+    <OutputDef>
+      <Execute displayName="PRC CURR">
+        <expr><![CDATA[return StoreString("PRC CURR", UpperCase(Translate(BaseCurrency, false, UpperCase(Currency))));]]></expr>
+      </Execute>
+      <Execute displayName="ASSETCODE">
+        <expr><![CDATA[return StoreString("ASSETCODE", Translate(ASSET_CODE, false, UpperCase(asset)));]]></expr>
+      </Execute>
+      <Execute displayName="SUPERD_ID_SPOT">
+        <expr><![CDATA[return StoreString("SUPERD_ID_SPOT",Strcat(GetStringByKey("PRC CURR"),Strcat(GetStringByKey("ASSETCODE"), Strcat("_", "SPOT"))));	]]></expr>
+      </Execute>
+      <Execute displayName="SUPERD_ID_FUT">
+        <expr><![CDATA[return StoreString("SUPERD_ID_FUT",Strcat(GetStringByKey("PRC CURR"),Strcat(GetStringByKey("ASSETCODE"), Strcat(If(NDFdelta != "ATMF", Strcat(NDFdelta, "D"), ""), opt_expiry))));	]]></expr>
+      </Execute>
+      <Execute displayName="SUPERD_ID_FRWD">
+        <expr><![CDATA[return StoreString("SUPERD_ID_FRWD",Strcat(GetStringByKey("PRC CURR"),Strcat(GetStringByKey("ASSETCODE"), Strcat("_", Strcat("FUT_", fut_expiry)))));	]]></expr>
+      </Execute>
+      <Execute displayName="ADJSTMS">
+        <expr><![CDATA[return StoreString("ADJSTMS", Transform2FTIDate(SubString(TimeStamp(), 1, 10), "MM-DD-YYYY"));]]></expr>
+      </Execute>
+      <Execute displayName="METAL_TYPE">
+        <expr><![CDATA[return StoreString("METAL_TYPE", If(((Strcmp(asset, "Gold") || Strcmp(asset, "Palladium")) || Strcmp(asset, "Platinum")) || Strcmp(asset, "Silver"), "Precious", "Non-Precious"));]]></expr>
+      </Execute>
+      <Execute disabled="1" displayName="TENOR">
+        <expr><![CDATA[return StoreString("TENOR", Select("", "NOMAPPEDVALUE", "select ft_f_get_tenor(:1) tenor from dual", fut_expiry, "", "", "", ""));]]></expr>
+      </Execute>
+      <Execute displayName="SUPERD_ID_MAT_FUT">
+        <expr><![CDATA[return StoreString("SUPERD_ID_MAT_FUT",Strcat(GetStringByKey("PRC CURR"),Strcat(GetStringByKey("ASSETCODE"),Strcat("_",Strcat(GetStringByKey("TENOR"),"_FUT")))));]]></expr>
+      </Execute>
+      <Execute displayName="SUPERD_ID_MAT_VOL">
+        <expr><![CDATA[return StoreString("SUPERD_ID_MAT_VOL",Strcat(GetStringByKey("PRC CURR"),Strcat(GetStringByKey("ASSETCODE"), Strcat(If(NDFdelta != "ATMF", Strcat(NDFdelta, "D"), ""), Strcat("_",Strcat(GetStringByKey("TENOR"), "_VOL"))))));]]></expr>
+      </Execute>
+      <Execute displayName="GPRC_IND">
+        <expr><![CDATA[return StoreString("GPRC_IND", GetRuntimeParameter("GPRC_IND"));]]></expr>
+      </Execute>
+      <Node displayName="SPOTISSU" messageformat="GSREF" name="STREET_REF" type="message">
+        <Options>
+          <Option key="OutputEncoding"/>
+          <Option key="AddTZIndicators">true</Option>
+          <Option key="SystemId">fti://repository/dtd/STREET_REF</Option>
+          <Option key="DocType">STREET_REF</Option>
+        </Options>
+        <condition><![CDATA[if ((OneHasValue(spot) && !Strcmp(spot, "NaN")) && !Strcmp(spot, "NULL"))
+	return "SPOTISSU";
+else
+	return "";]]></condition>
+        <Node name="USERID" type="attribute">
+          <expr><![CDATA[return "GUEST";]]></expr>
+        </Node>
+        <Node name="HEADER" type="element">
+          <Node name="CURRENTTIMESTAMP" type="element">
+            <expr><![CDATA[return TimeStamp();]]></expr>
+          </Node>
+          <Node name="DATASOURCE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="LOCALE" type="element">
+            <Node name="NLS" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "ENU";]]></expr>
+              </Node>
+            </Node>
+            <Node name="TIMEZONE" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "GMT Standard Time";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID_CTXT_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERDID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "COMODITY";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_NME" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_TBL_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ISSU";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MSGCLASSIFICATION" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "CURRFXRT";]]></expr>
+            </Node>
+          </Node>
+          <Node name="USERID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "CBA:SUPD:COMMODITY";]]></expr>
+            </Node>
+          </Node>
+          <Node name="VENDORRECORDID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetRecordIdentifier();]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node displayName="SPOT" name="Issue" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "Issue";]]></expr>
+          </Node>
+        </Node>
+        <Node displayName="CBA_ID_SPOT" name="IssueIdentifier" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "IssueIdentifier";]]></expr>
+          </Node>
+          <Node name="GLOBALUNIQIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "N";]]></expr>
+            </Node>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERDID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_SPOT");
+]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node disabled="1" displayName="SPOT" name="ISSUIssuePrice" type="segment">
+          <condition><![CDATA[if ((OneHasValue(spot) && !Strcmp(spot, "NaN")) && !Strcmp(spot, "NULL"))
+	return "ISSUIssuePrice";
+else
+	return "";	]]></condition>
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="COPY_FROM" type="attribute"/>
+          <Node name="COPY_TO" type="attribute"/>
+          <Node name="DUP_CHECK" type="attribute"/>
+          <Node name="ERRLVL_UNIQ_CHK" type="attribute"/>
+          <Node name="ERROR" type="attribute">
+            <expr><![CDATA[return "N";]]></expr>
+          </Node>
+          <Node name="LOOKUP" type="attribute"/>
+          <Node name="MATCH" type="attribute"/>
+          <Node name="PARENT_LINK" type="attribute"/>
+          <Node name="PUBLISH" type="attribute"/>
+          <Node name="SEGPROCESSEDIND" type="attribute"/>
+          <Node name="START_TMS_MATCH" type="attribute"/>
+          <Node name="TSATTRIBUTE" type="attribute"/>
+          <Node name="TSOPTION" type="attribute"/>
+          <Node name="TSTOLERANCE" type="attribute"/>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="BREAKPOINTAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CRRNTYLDCPCT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CUMSPLTAJCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="EVALUATIONTOTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return Transform2FTIDate(vd, "YYYYMMDD");]]></expr>
+            </Node>
+          </Node>
+          <Node name="DIRTYCLEANIND" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSRLTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="HIGHLOWTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTMNEM" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISIDINSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSPRCID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGTMS" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGUSRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTOID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCMLTPLRCRTE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCVALIDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "UNVERIFD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="QTLOTSIZECQTY" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDIVID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDVOLCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return spot;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <expr><![CDATA[return "BB";]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ORIGDATAPROVID" type="element">
+            <expr><![CDATA[return PRICING_SOURCE;]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="STARTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="VENDORPRCCMNTTXT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+        </Node>
+        <Node name="ISSUIssuePriceAttribute" type="segment">
+          <condition><![CDATA[if ((OneHasValue(spot) && !Strcmp(spot, "NaN")) && !Strcmp(spot, "NULL"))
+	return "ISSUIssuePrice";
+else
+	return "";]]></condition>
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GPRCIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("GPRC_IND");]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node name="ISPAIssuePriceHistory" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return vd;]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSPRCSTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VALID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return spot;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+      </Node>
+      <Node displayName="FORWARD" messageformat="GSREF" name="STREET_REF" type="message">
+        <Options>
+          <Option key="OutputEncoding"/>
+          <Option key="AddTZIndicators">true</Option>
+          <Option key="SystemId">fti://repository/dtd/STREET_REF</Option>
+          <Option key="DocType">STREET_REF</Option>
+        </Options>
+        <condition><![CDATA[if (GetStringByKey("METAL_TYPE")=="Precious")
+	return "";
+else
+	if ((OneHasValue(fwd) && !Strcmp(fwd, "NaN")) && !Strcmp(fwd, "NULL"))
+		return "FWDISSU";
+else
+	return "";]]></condition>
+        <Node name="USERID" type="attribute">
+          <expr><![CDATA[return "GUEST";]]></expr>
+        </Node>
+        <Node displayName="FORWARD" name="Issue" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "Issue";]]></expr>
+          </Node>
+        </Node>
+        <Node displayName="FORWARD" name="IssueIdentifier" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "IssueIdentifier";]]></expr>
+          </Node>
+          <Node name="GLOBALUNIQIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "N";]]></expr>
+            </Node>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERDID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_FRWD");
+]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node disabled="1" displayName="FORWARD" name="ISSUIssuePrice" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="COPY_FROM" type="attribute"/>
+          <Node name="COPY_TO" type="attribute"/>
+          <Node name="DUP_CHECK" type="attribute"/>
+          <Node name="ERRLVL_UNIQ_CHK" type="attribute"/>
+          <Node name="ERROR" type="attribute">
+            <expr><![CDATA[return "N";]]></expr>
+          </Node>
+          <Node name="LOOKUP" type="attribute"/>
+          <Node name="MATCH" type="attribute"/>
+          <Node name="PARENT_LINK" type="attribute"/>
+          <Node name="PUBLISH" type="attribute"/>
+          <Node name="SEGPROCESSEDIND" type="attribute"/>
+          <Node name="START_TMS_MATCH" type="attribute"/>
+          <Node name="TSATTRIBUTE" type="attribute"/>
+          <Node name="TSOPTION" type="attribute"/>
+          <Node name="TSTOLERANCE" type="attribute"/>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_FRWD" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_FRWD");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="BREAKPOINTAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CRRNTYLDCPCT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CUMSPLTAJCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="EVALUATIONTOTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return Transform2FTIDate(vd, "YYYYMMDD");]]></expr>
+            </Node>
+          </Node>
+          <Node name="DIRTYCLEANIND" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSRLTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="HIGHLOWTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTMNEM" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISIDINSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSPRCID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGTMS" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGUSRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTOID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCMLTPLRCRTE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCVALIDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "UNVERIFD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="QTLOTSIZECQTY" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDIVID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDVOLCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return fwd;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <expr><![CDATA[return "BB";]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ORIGDATAPROVID" type="element">
+            <expr><![CDATA[return PRICING_SOURCE;]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="STARTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="VENDORPRCCMNTTXT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+        </Node>
+        <Node name="ISSUIssuePriceAttribute" type="segment">
+          <condition disabled="1"><![CDATA[if ((OneHasValue(spot) && !Strcmp(spot, "NaN")) && !Strcmp(spot, "NULL"))
+	return "ISSUIssuePrice";
+else
+	return "";]]></condition>
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node disabled="1" displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_FRWD" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_FRWD");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GPRCIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("GPRC_IND");]]></expr>
+            </Node>
+          </Node>
+          <Node name="HEADER" type="element">
+            <Node name="CURRENTTIMESTAMP" type="element">
+              <expr><![CDATA[return TimeStamp();]]></expr>
+            </Node>
+            <Node name="DATASOURCE" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERD";]]></expr>
+              </Node>
+            </Node>
+            <Node name="LOCALE" type="element">
+              <Node name="NLS" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return "ENU";]]></expr>
+                </Node>
+              </Node>
+              <Node name="TIMEZONE" type="element">
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return "GMT Standard Time";]]></expr>
+                </Node>
+              </Node>
+            </Node>
+            <Node name="MAIN_ENTITY_ID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[	return GetStringByKey("SUPERD_ID_FRWD");]]></expr>
+              </Node>
+            </Node>
+            <Node name="MAIN_ENTITY_ID_CTXT_TYP" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MAIN_ENTITY_TYP" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "COMODITY";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MAIN_ENTITY_NME" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[	return GetStringByKey("SUPERD_ID_FRWD");]]></expr>
+              </Node>
+            </Node>
+            <Node name="MAIN_ENTITY_TBL_TYP" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "ISSU";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MSGCLASSIFICATION" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "CURRFXRT";]]></expr>
+              </Node>
+            </Node>
+            <Node name="USERID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "CBA:SUPD:COMMODITY";]]></expr>
+              </Node>
+            </Node>
+            <Node name="VENDORRECORDID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetRecordIdentifier();]]></expr>
+              </Node>
+            </Node>
+          </Node>
+        </Node>
+        <Node name="ISPAIssuePriceHistory" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node disabled="1" displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_FRWD" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_FRWD");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return vd;]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSPRCSTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VALID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return fwd;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+      </Node>
+      <Node displayName="FUTURE" messageformat="GSREF" name="STREET_REF" type="message">
+        <Options>
+          <Option key="OutputEncoding"/>
+          <Option key="AddTZIndicators">true</Option>
+          <Option key="SystemId">fti://repository/dtd/STREET_REF</Option>
+          <Option key="DocType">STREET_REF</Option>
+        </Options>
+        <condition><![CDATA[if (GetStringByKey("METAL_TYPE")=="Precious")
+	return "";
+else
+	if ((OneHasValue(NDFvol) && !Strcmp(NDFvol, "NaN")) && !Strcmp(NDFvol, "NULL"))
+		return "FUTISSU";
+	else
+		return "";	
+]]></condition>
+        <Node name="USERID" type="attribute">
+          <expr><![CDATA[return "GUEST";]]></expr>
+        </Node>
+        <Node name="HEADER" type="element">
+          <Node name="CURRENTTIMESTAMP" type="element">
+            <expr><![CDATA[return TimeStamp();]]></expr>
+          </Node>
+          <Node name="DATASOURCE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="LOCALE" type="element">
+            <Node name="NLS" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "ENU";]]></expr>
+              </Node>
+            </Node>
+            <Node name="TIMEZONE" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "GMT Standard Time";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_FUT");]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID_CTXT_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERDID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "COMFUT";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_NME" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_FUT");]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_TBL_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ISSU";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MSGCLASSIFICATION" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "CURRFXRT";]]></expr>
+            </Node>
+          </Node>
+          <Node name="USERID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "CBA:SUPD:COMMODITY";]]></expr>
+            </Node>
+          </Node>
+          <Node name="VENDORRECORDID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetRecordIdentifier();]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node displayName="FUT" name="Issue" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "Issue";]]></expr>
+          </Node>
+          <Node name="ISSTENORTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return NDFdelta;]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node displayName="FUT" name="IssueIdentifier" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "IssueIdentifier";]]></expr>
+          </Node>
+          <Node name="GLOBALUNIQIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "N";]]></expr>
+            </Node>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERDID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_FUT");
+]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node disabled="1" displayName="FUT" name="ISSUIssuePrice" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="COPY_FROM" type="attribute"/>
+          <Node name="COPY_TO" type="attribute"/>
+          <Node name="DUP_CHECK" type="attribute"/>
+          <Node name="ERRLVL_UNIQ_CHK" type="attribute"/>
+          <Node name="ERROR" type="attribute">
+            <expr><![CDATA[return "N";]]></expr>
+          </Node>
+          <Node name="LOOKUP" type="attribute"/>
+          <Node name="MATCH" type="attribute"/>
+          <Node name="PARENT_LINK" type="attribute"/>
+          <Node name="PUBLISH" type="attribute"/>
+          <Node name="SEGPROCESSEDIND" type="attribute"/>
+          <Node name="START_TMS_MATCH" type="attribute"/>
+          <Node name="TSATTRIBUTE" type="attribute"/>
+          <Node name="TSOPTION" type="attribute"/>
+          <Node name="TSTOLERANCE" type="attribute"/>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_FUT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_FUT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="BREAKPOINTAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CRRNTYLDCPCT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CUMSPLTAJCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="EVALUATIONTOTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return Transform2FTIDate(vd, "YYYYMMDD");]]></expr>
+            </Node>
+          </Node>
+          <Node name="DIRTYCLEANIND" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSRLTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="HIGHLOWTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTMNEM" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISIDINSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSPRCID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGTMS" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGUSRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTOID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCMLTPLRCRTE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "MDSPT003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCVALIDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "UNVERIFD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="QTLOTSIZECQTY" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDIVID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDVOLCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return NDFvol;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <expr><![CDATA[return "BB";]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ORIGDATAPROVID" type="element">
+            <expr><![CDATA[return PRICING_SOURCE;]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="STARTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="VENDORPRCCMNTTXT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+        </Node>
+        <Node name="ISSUIssuePriceAttribute" type="segment">
+          <condition disabled="1"><![CDATA[if ((OneHasValue(spot) && !Strcmp(spot, "NaN")) && !Strcmp(spot, "NULL"))
+	return "ISSUIssuePrice";
+else
+	return "";]]></condition>
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+            <Node displayName="SUPERD_ID_FUT" name="IssueIdentifier" type="segment">
+              <Node name="ACTION" type="attribute">
+                <expr><![CDATA[return "REFERENCE";]]></expr>
+              </Node>
+              <Node name="TYPE" type="attribute">
+                <expr><![CDATA[return "IssueIdentifier";]]></expr>
+              </Node>
+              <Node name="MATCH" type="attribute">
+                <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+              </Node>
+              <Node name="COPY_FROM" type="attribute">
+                <expr><![CDATA[return "ISID_OID";]]></expr>
+              </Node>
+              <Node name="COPY_TO" type="attribute">
+                <expr><![CDATA[return "ISID_OID";]]></expr>
+              </Node>
+              <Node name="ISSID" type="element">
+                <expr><![CDATA[return "TICKER";]]></expr>
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return GetStringByKey("SUPERD_ID_FUT");]]></expr>
+                </Node>
+              </Node>
+              <Node name="IDCTXTTYP" type="element">
+                <expr><![CDATA[return "TICKER";]]></expr>
+                <Node name="VALUE" type="attribute">
+                  <expr><![CDATA[return "SUPERDID";]]></expr>
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+          <Node disabled="1" displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_FUT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_FUT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GPRCIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("GPRC_IND");]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node name="ISPAIssuePriceHistory" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node disabled="1" displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_FUT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_FUT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return vd;]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSPRCSTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VALID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return NDFvol;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+      </Node>
+      <Node displayName="MAT_PRECMETAL_FUT" messageformat="GSREF" name="STREET_REF" type="message">
+        <Options>
+          <Option key="OutputEncoding"/>
+          <Option key="AddTZIndicators">true</Option>
+          <Option key="SystemId">fti://repository/dtd/STREET_REF</Option>
+          <Option key="DocType">STREET_REF</Option>
+        </Options>
+        <condition><![CDATA[if (GetStringByKey("METAL_TYPE")=="Precious")
+	if ((OneHasValue(fwd) && !Strcmp(fwd, "NaN")) && !Strcmp(fwd, "NULL"))
+		return "PRECFWDISSU";
+	else
+		return "";
+else
+	return "";]]></condition>
+        <Node name="USERID" type="attribute">
+          <expr><![CDATA[return "GUEST";]]></expr>
+        </Node>
+        <Node name="HEADER" type="element">
+          <Node name="CURRENTTIMESTAMP" type="element">
+            <expr><![CDATA[return TimeStamp();]]></expr>
+          </Node>
+          <Node name="DATASOURCE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="LOCALE" type="element">
+            <Node name="NLS" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "ENU";]]></expr>
+              </Node>
+            </Node>
+            <Node name="TIMEZONE" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "GMT Standard Time";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_MAT_FUT");]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID_CTXT_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERDID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "COMODITY";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_NME" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_MAT_FUT");]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_TBL_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ISSU";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MSGCLASSIFICATION" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "CURRFXRT";]]></expr>
+            </Node>
+          </Node>
+          <Node name="USERID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "CBA:SUPD:COMMODITY";]]></expr>
+            </Node>
+          </Node>
+          <Node name="VENDORRECORDID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetRecordIdentifier();]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node displayName="SUPERD_ID_MAT_FUT" name="Issue" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "Issue";]]></expr>
+          </Node>
+        </Node>
+        <Node displayName="SUPERD_ID_MAT_FUT" name="IssueIdentifier" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "IssueIdentifier";]]></expr>
+          </Node>
+          <Node name="GLOBALUNIQIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "N";]]></expr>
+            </Node>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERDID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_MAT_FUT");
+]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node disabled="1" displayName="SUPERD_ID_MAT_FUT" name="ISSUIssuePrice" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="COPY_FROM" type="attribute"/>
+          <Node name="COPY_TO" type="attribute"/>
+          <Node name="DUP_CHECK" type="attribute"/>
+          <Node name="ERRLVL_UNIQ_CHK" type="attribute"/>
+          <Node name="ERROR" type="attribute">
+            <expr><![CDATA[return "N";]]></expr>
+          </Node>
+          <Node name="LOOKUP" type="attribute"/>
+          <Node name="MATCH" type="attribute"/>
+          <Node name="PARENT_LINK" type="attribute"/>
+          <Node name="PUBLISH" type="attribute"/>
+          <Node name="SEGPROCESSEDIND" type="attribute"/>
+          <Node name="START_TMS_MATCH" type="attribute"/>
+          <Node name="TSATTRIBUTE" type="attribute"/>
+          <Node name="TSOPTION" type="attribute"/>
+          <Node name="TSTOLERANCE" type="attribute"/>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_MAT_FUT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_MAT_FUT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="BREAKPOINTAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CRRNTYLDCPCT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CUMSPLTAJCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="EVALUATIONTOTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return Transform2FTIDate(vd, "YYYYMMDD");]]></expr>
+            </Node>
+          </Node>
+          <Node name="DIRTYCLEANIND" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSRLTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="HIGHLOWTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTMNEM" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISIDINSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSPRCID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGTMS" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGUSRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTOID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCMLTPLRCRTE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCVALIDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "UNVERIFD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="QTLOTSIZECQTY" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDIVID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDVOLCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return fwd;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <expr><![CDATA[return "BB";]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ORIGDATAPROVID" type="element">
+            <expr><![CDATA[return PRICING_SOURCE;]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="STARTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="VENDORPRCCMNTTXT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+        </Node>
+        <Node name="ISSUIssuePriceAttribute" type="segment">
+          <condition><![CDATA[if (GetStringByKey("METAL_TYPE") == "Precious")
+	if ((OneHasValue(fwd) && !Strcmp(fwd, "NaN")) && !Strcmp(fwd, "NULL"))
+		return "PRECFWDISSU";
+	else
+		return "";
+else
+	return "";]]></condition>
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node disabled="1" displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_MAT_FUT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_MAT_FUT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GPRCIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("GPRC_IND");]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node name="ISPAIssuePriceHistory" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node disabled="1" displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_MAT_FUT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_MAT_FUT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return vd;]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSPRCSTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VALID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return fwd;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+      </Node>
+      <Node displayName="MAT_PRECMETAL_VOL" messageformat="GSREF" name="STREET_REF" type="message">
+        <Options>
+          <Option key="OutputEncoding"/>
+          <Option key="AddTZIndicators">true</Option>
+          <Option key="SystemId">fti://repository/dtd/STREET_REF</Option>
+          <Option key="DocType">STREET_REF</Option>
+        </Options>
+        <condition><![CDATA[if (GetStringByKey("METAL_TYPE") == "Precious")
+	if ((OneHasValue(NDFvol) && !Strcmp(NDFvol, "NaN")) && !Strcmp(NDFvol, "NULL"))
+		return "PRECFUTISSU";
+	else
+		return "";
+else
+	return "";]]></condition>
+        <Node name="USERID" type="attribute">
+          <expr><![CDATA[return "GUEST";]]></expr>
+        </Node>
+        <Node name="HEADER" type="element">
+          <Node name="CURRENTTIMESTAMP" type="element">
+            <expr><![CDATA[return TimeStamp();]]></expr>
+          </Node>
+          <Node name="DATASOURCE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="LOCALE" type="element">
+            <Node name="NLS" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "ENU";]]></expr>
+              </Node>
+            </Node>
+            <Node name="TIMEZONE" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "GMT Standard Time";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_MAT_VOL");]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_ID_CTXT_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERDID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "COMODITY";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_NME" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_MAT_VOL");]]></expr>
+            </Node>
+          </Node>
+          <Node name="MAIN_ENTITY_TBL_TYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ISSU";]]></expr>
+            </Node>
+          </Node>
+          <Node name="MSGCLASSIFICATION" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "CURRFXRT";]]></expr>
+            </Node>
+          </Node>
+          <Node name="USERID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "CBA:SUPD:COMMODITY";]]></expr>
+            </Node>
+          </Node>
+          <Node name="VENDORRECORDID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetRecordIdentifier();]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node displayName="SUPERD_ID_MAT_FUT" name="Issue" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "Issue";]]></expr>
+          </Node>
+        </Node>
+        <Node displayName="SUPERD_ID_MAT_FUT" name="IssueIdentifier" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "REFERENCE";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "IssueIdentifier";]]></expr>
+          </Node>
+          <Node name="GLOBALUNIQIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "N";]]></expr>
+            </Node>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERDID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[	return GetStringByKey("SUPERD_ID_MAT_VOL");
+]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node disabled="1" displayName="SUPERD_ID_MAT_FUT" name="ISSUIssuePrice" type="segment">
+          <condition><![CDATA[if ((OneHasValue(NDFvol) && !Strcmp(NDFvol, "NaN")) && !Strcmp(NDFvol, "NULL"))
+	return "ISSUIssuePrice";
+else
+	return "";]]></condition>
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="COPY_FROM" type="attribute"/>
+          <Node name="COPY_TO" type="attribute"/>
+          <Node name="DUP_CHECK" type="attribute"/>
+          <Node name="ERRLVL_UNIQ_CHK" type="attribute"/>
+          <Node name="ERROR" type="attribute">
+            <expr><![CDATA[return "N";]]></expr>
+          </Node>
+          <Node name="LOOKUP" type="attribute"/>
+          <Node name="MATCH" type="attribute"/>
+          <Node name="PARENT_LINK" type="attribute"/>
+          <Node name="PUBLISH" type="attribute"/>
+          <Node name="SEGPROCESSEDIND" type="attribute"/>
+          <Node name="START_TMS_MATCH" type="attribute"/>
+          <Node name="TSATTRIBUTE" type="attribute"/>
+          <Node name="TSOPTION" type="attribute"/>
+          <Node name="TSTOLERANCE" type="attribute"/>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_MAT_VOL" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_MAT_VOL");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="BREAKPOINTAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CRRNTYLDCPCT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="CUMSPLTAJCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="DATASTATTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "ACTIVE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="EVALUATIONTOTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return Transform2FTIDate(vd, "YYYYMMDD");]]></expr>
+            </Node>
+          </Node>
+          <Node name="DIRTYCLEANIND" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="FINSRLTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="HIGHLOWTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="IDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTMNEM" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="INSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISIDINSTRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ISSPRCID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGTMS" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="LASTCHGUSRID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTIDCTXTTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTNME" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="MKTOID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="ORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCMLTPLRCRTE" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "MDSPT003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCVALIDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "UNVERIFD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="QTLOTSIZECQTY" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDIVID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="SUBDORGID" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDTYP" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="TRDVOLCAMT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return NDFvol;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <expr><![CDATA[return "BB";]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ORIGDATAPROVID" type="element">
+            <expr><![CDATA[return PRICING_SOURCE;]]></expr>
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="STARTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="VENDORPRCCMNTTXT" type="element">
+            <Node name="INSERT_ONLY" type="attribute"/>
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+        </Node>
+        <Node name="ISSUIssuePriceAttribute" type="segment">
+          <condition><![CDATA[if ((OneHasValue(spot) && !Strcmp(spot, "NaN")) && !Strcmp(spot, "NULL"))
+	return "ISSUIssuePrice";
+else
+	return "";]]></condition>
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node disabled="1" displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_MAT_VOL" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_MAT_VOL");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="GPRCIND" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("GPRC_IND");]]></expr>
+            </Node>
+          </Node>
+        </Node>
+        <Node name="ISPAIssuePriceHistory" type="segment">
+          <Node name="ACTION" type="attribute">
+            <expr><![CDATA[return "INSERT";]]></expr>
+          </Node>
+          <Node name="TYPE" type="attribute">
+            <expr><![CDATA[return "ISSUIssuePrice";]]></expr>
+          </Node>
+          <Node disabled="1" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "INSTR_ID,ISID_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <Node name="VALUE" type="attribute"/>
+            </Node>
+            <Node name="ISSID" type="element">
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return INSTRUMENT_IDENTIFIER;]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="FinancialMarketIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "FinancialMarketIdentifier";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "MKT_OID";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "MKID1_MKT_CTXT_MKTID";]]></expr>
+            </Node>
+            <Node name="MKTIDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "BBFIEXCH";]]></expr>
+              </Node>
+            </Node>
+            <Node name="MKTID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "UNKNOWN";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node disabled="1" displayName="SUPERD_ID_SPOT" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_SPOT");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node displayName="SUPERD_ID_MAT_VOL" name="IssueIdentifier" type="segment">
+            <Node name="ACTION" type="attribute">
+              <expr><![CDATA[return "REFERENCE";]]></expr>
+            </Node>
+            <Node name="TYPE" type="attribute">
+              <expr><![CDATA[return "IssueIdentifier";]]></expr>
+            </Node>
+            <Node name="MATCH" type="attribute">
+              <expr><![CDATA[return "ISID3_ID_CTXT_ISS_ID";]]></expr>
+            </Node>
+            <Node name="COPY_FROM" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="COPY_TO" type="attribute">
+              <expr><![CDATA[return "ISID_OID";]]></expr>
+            </Node>
+            <Node name="ISSID" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return GetStringByKey("SUPERD_ID_MAT_VOL");]]></expr>
+              </Node>
+            </Node>
+            <Node name="IDCTXTTYP" type="element">
+              <expr><![CDATA[return "TICKER";]]></expr>
+              <Node name="VALUE" type="attribute">
+                <expr><![CDATA[return "SUPERDID";]]></expr>
+              </Node>
+            </Node>
+          </Node>
+          <Node name="ADJSTTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("ADJSTMS");]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTMS" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return vd;]]></expr>
+            </Node>
+          </Node>
+          <Node name="ISSPRCSTATTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VALID";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "003";]]></expr>
+            </Node>
+          </Node>
+          <Node name="DATASRCID" type="element">
+            <Node name="VALUE" type="attribute"/>
+          </Node>
+          <Node name="UNITCPRC" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return NDFvol;]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCSRCETYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "SUPERD";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCQTMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "PRCQUOTE";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCNGMETHTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "VENDOR";]]></expr>
+            </Node>
+          </Node>
+          <Node name="PRCCURRCDE" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return GetStringByKey("PRC CURR");]]></expr>
+            </Node>
+          </Node>
+          <Node name="ADDNLPRCQUALTYP" type="element">
+            <Node name="VALUE" type="attribute">
+              <expr><![CDATA[return "1";]]></expr>
+            </Node>
+          </Node>
+        </Node>
+      </Node>
+    </OutputDef>
+  </Output>
+  <Translation>
+    <table uri="SuperDMappings.ttl">
+      <import name="ASSET_CODE"/>
+      <import name="BaseCurrency"/>
+    </table>
+  </Translation>
+  <Expressions>
+    <Expression enabled="false" ident="KeyStreaming">
+      <expr><![CDATA[return asset;]]></expr>
+    </Expression>
+    <Expression enabled="false" ident="RecordIdentifier">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+    <Expression enabled="true" ident="GSDMFiltering">
+      <expr><![CDATA[switch (NDFdelta) {
+case "3":
+	return true;
+case "-3":
+	return true;	
+case "20":
+	return true;
+case "-20":
+	return true;
+case "30":
+	return true;
+case "-30":
+	return true;
+case "40":
+	return true;
+case "-40":
+	return true;
+case "45":
+	return true;
+case "-45":
+	return true;	
+	default:
+	return false;
+}
+]]></expr>
+    </Expression>
+    <Expression enabled="false" ident="VDSFiltering">
+      <expr><![CDATA[return "";]]></expr>
+    </Expression>
+  </Expressions>
+</MappingDef>

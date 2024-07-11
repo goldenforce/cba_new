@@ -1,0 +1,117 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>cmteam.thegoldensource</groupId>
+	<artifactId>EARs</artifactId>
+	<version>8.7.2.01</version>
+	
+	<name>DB Package</name>
+
+	<distributionManagement>
+		<repository>
+			<id>repo_mumbai</id>
+			<name>Artifactory</name>
+			<url>http://cmsif:8082/artifactory/Dev/</url>
+		</repository>
+	</distributionManagement>
+	
+	<properties>
+		<Release_Version_EARs>8.7.2.01</Release_Version_EARs>
+	</properties>
+	
+	<build>
+		<plugins>
+		
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-1</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${session.executionRootDirectory}/GEM/SchemaDetails.Properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>maven-ant-run</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target name="Create-EARs-zip">
+								<echo message=" Environment name is...........${ENV_NAME}" />
+								<echo message=" AppServer Name is.............${APP_SERVER}" />
+								<echo message=" AppServer Configuration is....${APP_SERVER_CONFIG}" />
+								<echo message=" AppServer Version is..........${APP_SERVER_VERSION}" />
+								<echo message="Finally The EARs location is........${ENV_NAME}_${APP_SERVER} ${APP_SERVER_CONFIG}_${APP_SERVER_VERSION}"/>
+								<echo message="EARs version pushing into remote repo is...${Release_Version_EARs} "/>
+								<zip destfile="Final_EARs/GS_Release_EARs_${Release_Version_EARs}.zip" basedir="GEM/workspace/" includes="*"/>								   
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Releases</id>
+						<goals>
+							<goal>deploy-file</goal>
+						</goals>
+						<phase>deploy</phase>
+						<configuration>
+							<repositoryId>Artifactory</repositoryId>
+							<url>http://cmsif:8082/artifactory/Dev/</url>
+							<file>${basedir}/Final_EARs/GS_Release_EARs_${Release_Version_EARs}.zip</file>
+							<groupId>cm.autoinstall</groupId>
+                            <artifactId>ears</artifactId>
+                            <version>${Release_Version_EARs}</version>
+                            <packaging>zip</packaging>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+						<configuration>
+							<excludeDefaultDirectories>true</excludeDefaultDirectories>
+							<filesets>
+								<fileset>
+									<directory>Final_EARs</directory>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+	
+</project>
