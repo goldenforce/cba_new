@@ -47,7 +47,6 @@
 			<fileset dir="${temp.dir}/">
 				<include name="${package.name}.tar.gz"/>
 				<include name="PackageDescription.xml"/>
-				<include name="*Release*Notes*.docx"/>
 			</fileset>
 		</zip>
 
