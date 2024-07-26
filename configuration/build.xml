@@ -3,7 +3,7 @@
 	<!-- Specify all paths here, also only specify relative paths -->
 	<property name="build.dir" value="."/>
 	<property name="base.dir" value="../"/>
-	<property name="temp.dir" value="temp"/>
+	<property name="temp.dir" value="../../../temp"/>
 	<property name="packages.dir" value="packages"/>
 	<property name="package.name" value="CBA_Custom_Configuration"/>
 	<property name="package.version" value="8.7.0.01"/>
